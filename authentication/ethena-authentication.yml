@@ -1,0 +1,15 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/ethena-openapi-original.yml
+docs: https://help.goethena.com/hc/en-us/articles/28796851013773-Ethena-s-API
+summary:
+  types:
+  - http
+schemes:
+- name: basic_auth
+  type: http
+  scheme: basic
+  description: Send requests with the Authorization header that contains the word `Basic` followed
+    by a space and a base64-encoded string of the username and api key, `username:apiKey`.
+  sources:
+  - openapi/ethena-openapi-original.yml
