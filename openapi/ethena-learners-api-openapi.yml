@@ -1,0 +1,2174 @@
+openapi: 3.1.0
+info:
+  version: 1.3.0
+  title: Ethena Learner Training Campaigns Learners API
+  termsOfService: https://app.goethena.com/legal-and-privacy
+  contact:
+    name: Contact support
+    email: support@goethena.com
+  x-logo:
+    url: ./ethena-logo.png
+    altText: Ethena logo
+  description: 'The Ethena API allows you to view and manage learners and training information.
+
+
+    # Accessing the API
+
+    In order to get access to our API please work with your sales representative to get an
+
+    API key provisioned and shared with you.
+
+
+    Webhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.
+
+
+    # Changelog
+
+    - **v1.0.0** - Initial release of the API, including learners, training campaigns, learner training campaigns, and learner training modules.
+
+    - **v1.1.0** - Added webhooks operations and support for learner training campaign completed webhook.
+
+    - **v1.2.0** - Remove separate language region property on learner and support Unicode Common Locale Data Repository language formats.
+
+    - **v1.3.0** - Added filter parameters for learners (email, name), learner training modules (learnerStatus, trainingCampaignStatus), and learner training campaigns (learnerStatus, trainingCampaignStatus). Added training campaign status field to training campaigns.'
+servers:
+- url: https://api.goethena.com
+tags:
+- name: Learners
+  description: Learner information and operations.
+paths:
+  /v1/learners:
+    get:
+      tags:
+      - Learners
+      summary: Get learners
+      description: "Get many learners.\n\nThe query parameter filters are applied as `AND` conditions across different filters. \nIf multiple filters are used, the response will include only the learners that satisfy all the filters.\n\nWithin a single filter, multiple values are applied as `OR` conditions."
+      operationId: getLearners
+      parameters:
+      - name: id
+        in: query
+        description: Use this parameter to filter learners by id.
+        schema:
+          type: array
+          maxItems: 25
+          items:
+            description: The unique identifier of a learner.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: abc123def4
+        example:
+        - abc123def4
+        - xyz123abc4
+      - name: status
+        in: query
+        description: Use this parameter to filter learners by status. By default, all statuses are returned.
+        schema:
+          type: array
+          items:
+            description: Status of the learner account. Active learners can access training. Deactivated and terminated learners cannot access training.
+            type: string
+            enum: &id001
+            - ACTIVE
+            - DEACTIVATED
+            - TERMINATED
+            example: ACTIVE
+        example:
+        - ACTIVE
+      - name: email
+        in: query
+        description: Use this parameter to filter learners by exact email match within the tenant.
+        schema:
+          type: array
+          maxItems: 25
+          items:
+            type: string
+            format: email
+        example:
+        - first.last@your-domain.com
+      - name: name
+        in: query
+        description: Use this parameter to filter learners by exact name match.
+        schema:
+          type: array
+          maxItems: 25
+          items:
+            type: string
+            minLength: 2
+            maxLength: 100
+        example:
+        - First Last
+      - name: limit
+        in: query
+        description: Use this parameter to limit the number of entities returned.
+        schema:
+          type: integer
+          minimum: 1
+          default: 25
+          maximum: 100
+      - example: abc123def25
+        name: cursor
+        in: query
+        description: "Use this parameter to paginate through entities. The cursor is the `id` of the last entity you want to start from.\n\nTo get the first page, omit this parameter. \n\nTo get the next page, use the `id` of the last entity from the previous response. Continue paginating while `hasMore` is `true` in the response.\n\nExample workflow:\n1. GET /v1/{endpoint} → returns data + hasMore: true, last entity id: \"xyz789end\"\n2. GET /v1/{endpoint}?cursor=xyz789end → returns next page"
+        schema:
+          type: string
+      security:
+      - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    limit:
+                      type: integer
+                    hasMore:
+                      type: boolean
+                    data:
+                      type: array
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                        - id
+                        - name
+                        - email
+                        - status
+                        - country
+                        - isManager
+                        - language
+                        - trainingUrl
+                        properties:
+                          id:
+                            allOf:
+                            - description: The unique identifier of a learner.
+                              type: string
+                              pattern: ^[a-zA-Z0-9]+$
+                              example: abc123def4
+                          name:
+                            allOf:
+                            - description: The learner's full name.
+                              type: string
+                              minLength: 2
+                              maxLength: 100
+                              example: First Last
+                          status:
+                            allOf:
+                            - description: Status of the learner account. Active learners can access training. Deactivated and terminated learners cannot access training.
+                              type: string
+                              enum: *id001
+                              example: ACTIVE
+                          email:
+                            allOf:
+                            - description: The learner's unique email address.
+                              type: string
+                              format: email
+                              maxLength: 255
+                              example: first.last@{your-domain}.com
+                          country:
+                            allOf:
+                            - description: The learner's country of employment. Three letter country code.
+                              type: string
+                              minLength: 3
+                              maxLength: 3
+                              enum:
+                              - AFG
+                              - ALA
+                              - ALB
+                              - DZA
+                              - ASM
+                              - AND
+                              - AGO
+                              - AIA
+                              - ATA
+                              - ATG
+                              - ARG
+                              - ARM
+                              - ABW
+                              - AUS
+                              - AUT
+                              - AZE
+                              - BHS
+                              - BHR
+                              - BGD
+                              - BRB
+                              - BLR
+                              - BEL
+                              - BLZ
+                              - BEN
+                              - BMU
+                              - BTN
+                              - BOL
+                              - BES
+                              - BIH
+                              - BWA
+                              - BVT
+                              - BRA
+                              - IOT
+                              - VGB
+                              - BRN
+                              - BGR
+                              - BFA
+                              - BDI
+                              - CPV
+                              - KHM
+                              - CMR
+                              - CAN
+                              - CYM
+                              - CAF
+                              - TCD
+                              - CHL
+                              - CHN
+                              - CXR
+                              - CCK
+                              - COL
+                              - COM
+                              - COG
+                              - COD
+                              - COK
+                              - CRI
+                              - CIV
+                              - HRV
+                              - CUB
+                              - CUW
+                              - CYP
+                              - CZE
+                              - DNK
+                              - DJI
+                              - DMA
+                              - DOM
+                              - ECU
+                              - EGY
+                              - SLV
+                              - GNQ
+                              - ERI
+                              - EST
+                              - SWZ
+                              - ETH
+                              - FLK
+                              - FRO
+                              - FJI
+                              - FIN
+                              - FRA
+                              - GUF
+                              - PYF
+                              - ATF
+                              - GAB
+                              - GMB
+                              - GEO
+                              - DEU
+                              - GHA
+                              - GIB
+                              - GRC
+                              - GRL
+                              - GRD
+                              - GLP
+                              - GUM
+                              - GTM
+                              - GGY
+                              - GIN
+                              - GNB
+                              - GUY
+                              - HTI
+                              - HMD
+                              - HND
+                              - HKG
+                              - HUN
+                              - ISL
+                              - IND
+                              - IDN
+                              - IRN
+                              - IRQ
+                              - IRL
+                              - IMN
+                              - ISR
+                              - ITA
+                              - JAM
+                              - JPN
+                              - JEY
+                              - JOR
+                              - KAZ
+                              - KEN
+                              - KIR
+                              - KWT
+                              - KGZ
+                              - LAO
+                              - LVA
+                              - LBN
+                              - LSO
+                              - LBR
+                              - LBY
+                              - LIE
+                              - LTU
+                              - LUX
+                              - MAC
+                              - MDG
+                              - MWI
+                              - MYS
+                              - MDV
+                              - MLI
+                              - MLT
+                              - MHL
+                              - MTQ
+                              - MRT
+                              - MUS
+                              - MYT
+                              - MEX
+                              - FSM
+                              - MDA
+                              - MCO
+                              - MNG
+                              - MNE
+                              - MSR
+                              - MAR
+                              - MOZ
+                              - MMR
+                              - NAM
+                              - NRU
+                              - NPL
+                              - NLD
+                              - NCL
+                              - NZL
+                              - NIC
+                              - NER
+                              - NGA
+                              - NIU
+                              - NFK
+                              - PRK
+                              - MKD
+                              - MNP
+                              - NOR
+                              - OMN
+                              - PAK
+                              - PLW
+                              - PSE
+                              - PAN
+                              - PNG
+                              - PRY
+                              - PER
+                              - PHL
+                              - PCN
+                              - POL
+                              - PRT
+                              - PRI
+                              - QAT
+                              - REU
+                              - ROU
+                              - RUS
+                              - RWA
+                              - BLM
+                              - SHN
+                              - KNA
+                              - LCA
+                              - MAF
+                              - SPM
+                              - VCT
+                              - WSM
+                              - SMR
+                              - STP
+                              - SAU
+                              - SEN
+                              - SRB
+                              - SYC
+                              - SLE
+                              - SGP
+                              - SXM
+                              - SVK
+                              - SVN
+                              - SLB
+                              - SOM
+                              - ZAF
+                              - SGS
+                              - KOR
+                              - SSD
+                              - ESP
+                              - LKA
+                              - SDN
+                              - SUR
+                              - SJM
+                              - SWE
+                              - CHE
+                              - SYR
+                              - TWN
+                              - TJK
+                              - TZA
+                              - THA
+                              - TLS
+                              - TGO
+                              - TKL
+                              - TON
+                              - TTO
+                              - TUN
+                              - TUR
+                              - TKM
+                              - TCA
+                              - TUV
+                              - UGA
+                              - UKR
+                              - ARE
+                              - GBR
+                              - USA
+                              - UMI
+                              - URY
+                              - UZB
+                              - VUT
+                              - VAT
+                              - VEN
+                              - VNM
+                              - VIR
+                              - WLF
+                              - ESH
+                              - YEM
+                              - ZMB
+                              - ZWE
+                              example: USA
+                          state:
+                            allOf:
+                            - description: 'The learner''s state of employment. Two letter state code.
+
+
+                                Validation rules:
+
+                                - Required when country is "USA"
+
+                                - Must be null or omitted for all other countries
+
+                                - Empty strings ("") are not allowed
+
+
+                                Examples:
+
+                                - "USA" + "NY" ✅
+
+                                - "USA" + null ❌
+
+                                - "CAN" + null ✅
+
+                                - "CAN" + "ON" ❌ (Canadian provinces not supported)'
+                              type: string
+                              minLength: 2
+                              maxLength: 2
+                              enum:
+                              - AL
+                              - AK
+                              - AZ
+                              - AR
+                              - CA
+                              - CO
+                              - CT
+                              - DE
+                              - FL
+                              - GA
+                              - HI
+                              - ID
+                              - IL
+                              - IN
+                              - IA
+                              - KS
+                              - KY
+                              - LA
+                              - ME
+                              - MD
+                              - MA
+                              - MI
+                              - MN
+                              - MS
+                              - MO
+                              - MT
+                              - NE
+                              - NV
+                              - NH
+                              - NJ
+                              - NM
+                              - NY
+                              - NC
+                              - ND
+                              - OH
+                              - OK
+                              - OR
+                              - PA
+                              - RI
+                              - SC
+                              - SD
+                              - TN
+                              - TX
+                              - UT
+                              - VT
+                              - VA
+                              - WA
+                              - WV
+                              - WI
+                              - WY
+                              - AS
+                              - DC
+                              - FM
+                              - GU
+                              - MH
+                              - MP
+                              - PW
+                              - PR
+                              - VI
+                              example: NY
+                          isManager:
+                            allOf:
+                            - description: Whether the learner is a manager.
+                              type: boolean
+                              example: true
+                          managerLearnerId:
+                            allOf:
+                            - description: The unique identifier of the learner's manager.
+                              allOf:
+                              - description: The unique identifier of a learner.
+                                type: string
+                                pattern: ^[a-zA-Z0-9]+$
+                                example: abc123def4
+                              example: xyz123abc4
+                          department:
+                            allOf:
+                            - description: The department the learner belongs to.
+                              type: string
+                              maxLength: 255
+                              example: Engineering
+                          workerType:
+                            allOf:
+                            - description: The learner's worker type.
+                              type: string
+                              maxLength: 255
+                              example: Full Time
+                          customCategory:
+                            allOf:
+                            - description: The learner's custom category. Can be populated with any value. For example, the office or city of a learner.
+                              type: string
+                              maxLength: 255
+                              example: Brooklyn
+                          language:
+                            allOf:
+                            - description: "The learner's language. Represented as any Unicode CLDR language documented here: https://cldr.unicode.org/\n\n⚠️ Important: Use language codes (e.g., \"en\"), not language names (e.g., \"English\").\n\n✅ Common valid examples:\n  - \"en\": English\n  - \"es\": Spanish  \n  - \"es-419\": Spanish (Latin America)\n  - \"es-MX\": Spanish (Mexico)\n  - \"zh\": Chinese\n  - \"zh-TW\": Chinese (Taiwan)\n  - \"zh-Hant-HK\": Chinese (traditional, Hong Kong)\n  - \"fr\": French\n  - \"de\": German\n  \n❌ Common invalid examples, which will cause validation errors:\n  - \"English\" (use \"en\" instead)\n  - \"Spanish\" (use \"es\" instead)  \n  - \"Chinese\" (use \"zh\" instead)"
+                              type: string
+                              minLength: 2
+                              maxLength: 32
+                              example: en
+                          trainingUrl:
+                            allOf:
+                            - description: 'The learner-specific link to their Ethena training dashboard.
+
+
+                                For SSO companies, the URL includes the SSO connection parameter.
+
+                                For non-SSO companies, the URL includes the learning center login key.'
+                              type: string
+                              format: uri
+                              example: https://{ethena-domain}/learning?key={uuid}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id002
+                - title
+                properties: &id003
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id002
+                properties: *id003
+    post:
+      tags:
+      - Learners
+      summary: Create a new learner
+      description: Create a new learner.
+      operationId: createLearner
+      security:
+      - basic_auth: []
+      requestBody:
+        description: Learner to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - email
+              - country
+              - isManager
+              - language
+              properties:
+                name:
+                  allOf:
+                  - description: The learner's full name.
+                    type: string
+                    minLength: 2
+                    maxLength: 100
+                    example: First Last
+                email:
+                  allOf:
+                  - description: The learner's unique email address.
+                    type: string
+                    format: email
+                    maxLength: 255
+                    example: first.last@{your-domain}.com
+                country:
+                  allOf:
+                  - description: The learner's country of employment. Three letter country code.
+                    type: string
+                    minLength: 3
+                    maxLength: 3
+                    enum:
+                    - AFG
+                    - ALA
+                    - ALB
+                    - DZA
+                    - ASM
+                    - AND
+                    - AGO
+                    - AIA
+                    - ATA
+                    - ATG
+                    - ARG
+                    - ARM
+                    - ABW
+                    - AUS
+                    - AUT
+                    - AZE
+                    - BHS
+                    - BHR
+                    - BGD
+                    - BRB
+                    - BLR
+                    - BEL
+                    - BLZ
+                    - BEN
+                    - BMU
+                    - BTN
+                    - BOL
+                    - BES
+                    - BIH
+                    - BWA
+                    - BVT
+                    - BRA
+                    - IOT
+                    - VGB
+                    - BRN
+                    - BGR
+                    - BFA
+                    - BDI
+                    - CPV
+                    - KHM
+                    - CMR
+                    - CAN
+                    - CYM
+                    - CAF
+                    - TCD
+                    - CHL
+                    - CHN
+                    - CXR
+                    - CCK
+                    - COL
+                    - COM
+                    - COG
+                    - COD
+                    - COK
+                    - CRI
+                    - CIV
+                    - HRV
+                    - CUB
+                    - CUW
+                    - CYP
+                    - CZE
+                    - DNK
+                    - DJI
+                    - DMA
+                    - DOM
+                    - ECU
+                    - EGY
+                    - SLV
+                    - GNQ
+                    - ERI
+                    - EST
+                    - SWZ
+                    - ETH
+                    - FLK
+                    - FRO
+                    - FJI
+                    - FIN
+                    - FRA
+                    - GUF
+                    - PYF
+                    - ATF
+                    - GAB
+                    - GMB
+                    - GEO
+                    - DEU
+                    - GHA
+                    - GIB
+                    - GRC
+                    - GRL
+                    - GRD
+                    - GLP
+                    - GUM
+                    - GTM
+                    - GGY
+                    - GIN
+                    - GNB
+                    - GUY
+                    - HTI
+                    - HMD
+                    - HND
+                    - HKG
+                    - HUN
+                    - ISL
+                    - IND
+                    - IDN
+                    - IRN
+                    - IRQ
+                    - IRL
+                    - IMN
+                    - ISR
+                    - ITA
+                    - JAM
+                    - JPN
+                    - JEY
+                    - JOR
+                    - KAZ
+                    - KEN
+                    - KIR
+                    - KWT
+                    - KGZ
+                    - LAO
+                    - LVA
+                    - LBN
+                    - LSO
+                    - LBR
+                    - LBY
+                    - LIE
+                    - LTU
+                    - LUX
+                    - MAC
+                    - MDG
+                    - MWI
+                    - MYS
+                    - MDV
+                    - MLI
+                    - MLT
+                    - MHL
+                    - MTQ
+                    - MRT
+                    - MUS
+                    - MYT
+                    - MEX
+                    - FSM
+                    - MDA
+                    - MCO
+                    - MNG
+                    - MNE
+                    - MSR
+                    - MAR
+                    - MOZ
+                    - MMR
+                    - NAM
+                    - NRU
+                    - NPL
+                    - NLD
+                    - NCL
+                    - NZL
+                    - NIC
+                    - NER
+                    - NGA
+                    - NIU
+                    - NFK
+                    - PRK
+                    - MKD
+                    - MNP
+                    - NOR
+                    - OMN
+                    - PAK
+                    - PLW
+                    - PSE
+                    - PAN
+                    - PNG
+                    - PRY
+                    - PER
+                    - PHL
+                    - PCN
+                    - POL
+                    - PRT
+                    - PRI
+                    - QAT
+                    - REU
+                    - ROU
+                    - RUS
+                    - RWA
+                    - BLM
+                    - SHN
+                    - KNA
+                    - LCA
+                    - MAF
+                    - SPM
+                    - VCT
+                    - WSM
+                    - SMR
+                    - STP
+                    - SAU
+                    - SEN
+                    - SRB
+                    - SYC
+                    - SLE
+                    - SGP
+                    - SXM
+                    - SVK
+                    - SVN
+                    - SLB
+                    - SOM
+                    - ZAF
+                    - SGS
+                    - KOR
+                    - SSD
+                    - ESP
+                    - LKA
+                    - SDN
+                    - SUR
+                    - SJM
+                    - SWE
+                    - CHE
+                    - SYR
+                    - TWN
+                    - TJK
+                    - TZA
+                    - THA
+                    - TLS
+                    - TGO
+                    - TKL
+                    - TON
+                    - TTO
+                    - TUN
+                    - TUR
+                    - TKM
+                    - TCA
+                    - TUV
+                    - UGA
+                    - UKR
+                    - ARE
+                    - GBR
+                    - USA
+                    - UMI
+                    - URY
+                    - UZB
+                    - VUT
+                    - VAT
+                    - VEN
+                    - VNM
+                    - VIR
+                    - WLF
+                    - ESH
+                    - YEM
+                    - ZMB
+                    - ZWE
+                    example: USA
+                state:
+                  allOf:
+                  - description: 'The learner''s state of employment. Two letter state code.
+
+
+                      Validation rules:
+
+                      - Required when country is "USA"
+
+                      - Must be null or omitted for all other countries
+
+                      - Empty strings ("") are not allowed
+
+
+                      Examples:
+
+                      - "USA" + "NY" ✅
+
+                      - "USA" + null ❌
+
+                      - "CAN" + null ✅
+
+                      - "CAN" + "ON" ❌ (Canadian provinces not supported)'
+                    type: string
+                    minLength: 2
+                    maxLength: 2
+                    enum:
+                    - AL
+                    - AK
+                    - AZ
+                    - AR
+                    - CA
+                    - CO
+                    - CT
+                    - DE
+                    - FL
+                    - GA
+                    - HI
+                    - ID
+                    - IL
+                    - IN
+                    - IA
+                    - KS
+                    - KY
+                    - LA
+                    - ME
+                    - MD
+                    - MA
+                    - MI
+                    - MN
+                    - MS
+                    - MO
+                    - MT
+                    - NE
+                    - NV
+                    - NH
+                    - NJ
+                    - NM
+                    - NY
+                    - NC
+                    - ND
+                    - OH
+                    - OK
+                    - OR
+                    - PA
+                    - RI
+                    - SC
+                    - SD
+                    - TN
+                    - TX
+                    - UT
+                    - VT
+                    - VA
+                    - WA
+                    - WV
+                    - WI
+                    - WY
+                    - AS
+                    - DC
+                    - FM
+                    - GU
+                    - MH
+                    - MP
+                    - PW
+                    - PR
+                    - VI
+                    example: NY
+                isManager:
+                  allOf:
+                  - description: Whether the learner is a manager.
+                    type: boolean
+                    example: true
+                managerLearnerId:
+                  allOf:
+                  - description: The unique identifier of the learner's manager.
+                    allOf:
+                    - description: The unique identifier of a learner.
+                      type: string
+                      pattern: ^[a-zA-Z0-9]+$
+                      example: abc123def4
+                    example: xyz123abc4
+                department:
+                  allOf:
+                  - description: The department the learner belongs to.
+                    type: string
+                    maxLength: 255
+                    example: Engineering
+                workerType:
+                  allOf:
+                  - description: The learner's worker type.
+                    type: string
+                    maxLength: 255
+                    example: Full Time
+                customCategory:
+                  allOf:
+                  - description: The learner's custom category. Can be populated with any value. For example, the office or city of a learner.
+                    type: string
+                    maxLength: 255
+                    example: Brooklyn
+                language:
+                  allOf:
+                  - description: "The learner's language. Represented as any Unicode CLDR language documented here: https://cldr.unicode.org/\n\n⚠️ Important: Use language codes (e.g., \"en\"), not language names (e.g., \"English\").\n\n✅ Common valid examples:\n  - \"en\": English\n  - \"es\": Spanish  \n  - \"es-419\": Spanish (Latin America)\n  - \"es-MX\": Spanish (Mexico)\n  - \"zh\": Chinese\n  - \"zh-TW\": Chinese (Taiwan)\n  - \"zh-Hant-HK\": Chinese (traditional, Hong Kong)\n  - \"fr\": French\n  - \"de\": German\n  \n❌ Common invalid examples, which will cause validation errors:\n  - \"English\" (use \"en\" instead)\n  - \"Spanish\" (use \"es\" instead)  \n  - \"Chinese\" (use \"zh\" instead)"
+                    type: string
+                    minLength: 2
+                    maxLength: 32
+                    example: en
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - id
+                properties:
+                  id:
+                    allOf:
+                    - description: The unique identifier of a learner.
+                      type: string
+                      pattern: ^[a-zA-Z0-9]+$
+                      example: abc123def4
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id004
+                - title
+                properties: &id005
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id004
+                properties: *id005
+  /v1/learners/{id}:
+    get:
+      tags:
+      - Learners
+      summary: Get a learner by id
+      description: Get a learner.
+      operationId: getLearnerById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          description: The unique identifier of a learner.
+          type: string
+          pattern: ^[a-zA-Z0-9]+$
+          example: abc123def4
+      security:
+      - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  required:
+                  - id
+                  - name
+                  - email
+                  - status
+                  - country
+                  - isManager
+                  - language
+                  - trainingUrl
+                  properties:
+                    id:
+                      allOf:
+                      - description: The unique identifier of a learner.
+                        type: string
+                        pattern: ^[a-zA-Z0-9]+$
+                        example: abc123def4
+                    name:
+                      allOf:
+                      - description: The learner's full name.
+                        type: string
+                        minLength: 2
+                        maxLength: 100
+                        example: First Last
+                    status:
+                      allOf:
+                      - description: Status of the learner account. Active learners can access training. Deactivated and terminated learners cannot access training.
+                        type: string
+                        enum:
+                        - ACTIVE
+                        - DEACTIVATED
+                        - TERMINATED
+                        example: ACTIVE
+                    email:
+                      allOf:
+                      - description: The learner's unique email address.
+                        type: string
+                        format: email
+                        maxLength: 255
+                        example: first.last@{your-domain}.com
+                    country:
+                      allOf:
+                      - description: The learner's country of employment. Three letter country code.
+                        type: string
+                        minLength: 3
+                        maxLength: 3
+                        enum:
+                        - AFG
+                        - ALA
+                        - ALB
+                        - DZA
+                        - ASM
+                        - AND
+                        - AGO
+                        - AIA
+                        - ATA
+                        - ATG
+                        - ARG
+                        - ARM
+                        - ABW
+                        - AUS
+                        - AUT
+                        - AZE
+                        - BHS
+                        - BHR
+                        - BGD
+                        - BRB
+                        - BLR
+                        - BEL
+                        - BLZ
+                        - BEN
+                        - BMU
+                        - BTN
+                        - BOL
+                        - BES
+                        - BIH
+                        - BWA
+                        - BVT
+                        - BRA
+                        - IOT
+                        - VGB
+                        - BRN
+                        - BGR
+                        - BFA
+                        - BDI
+                        - CPV
+                        - KHM
+                        - CMR
+                        - CAN
+                        - CYM
+                        - CAF
+                        - TCD
+                        - CHL
+                        - CHN
+                        - CXR
+                        - CCK
+                        - COL
+                        - COM
+                        - COG
+                        - COD
+                        - COK
+                        - CRI
+                        - CIV
+                        - HRV
+                        - CUB
+                        - CUW
+                        - CYP
+                        - CZE
+                        - DNK
+                        - DJI
+                        - DMA
+                        - DOM
+                        - ECU
+                        - EGY
+                        - SLV
+                        - GNQ
+                        - ERI
+                        - EST
+                        - SWZ
+                        - ETH
+                        - FLK
+                        - FRO
+                        - FJI
+                        - FIN
+                        - FRA
+                        - GUF
+                        - PYF
+                        - ATF
+                        - GAB
+                        - GMB
+                        - GEO
+                        - DEU
+                        - GHA
+                        - GIB
+                        - GRC
+                        - GRL
+                        - GRD
+                        - GLP
+                        - GUM
+                        - GTM
+                        - GGY
+                        - GIN
+                        - GNB
+                        - GUY
+                        - HTI
+                        - HMD
+                        - HND
+                        - HKG
+                        - HUN
+                        - ISL
+                        - IND
+                        - IDN
+                        - IRN
+                        - IRQ
+                        - IRL
+                        - IMN
+                        - ISR
+                        - ITA
+                        - JAM
+                        - JPN
+                        - JEY
+                        - JOR
+                        - KAZ
+                        - KEN
+                        - KIR
+                        - KWT
+                        - KGZ
+                        - LAO
+                        - LVA
+                        - LBN
+                        - LSO
+                        - LBR
+                        - LBY
+                        - LIE
+                        - LTU
+                        - LUX
+                        - MAC
+                        - MDG
+                        - MWI
+                        - MYS
+                        - MDV
+                        - MLI
+                        - MLT
+                        - MHL
+                        - MTQ
+                        - MRT
+                        - MUS
+                        - MYT
+                        - MEX
+                        - FSM
+                        - MDA
+                        - MCO
+                        - MNG
+                        - MNE
+                        - MSR
+                        - MAR
+                        - MOZ
+                        - MMR
+                        - NAM
+                        - NRU
+                        - NPL
+                        - NLD
+                        - NCL
+                        - NZL
+                        - NIC
+                        - NER
+                        - NGA
+                        - NIU
+                        - NFK
+                        - PRK
+                        - MKD
+                        - MNP
+                        - NOR
+                        - OMN
+                        - PAK
+                        - PLW
+                        - PSE
+                        - PAN
+                        - PNG
+                        - PRY
+                        - PER
+                        - PHL
+                        - PCN
+                        - POL
+                        - PRT
+                        - PRI
+                        - QAT
+                        - REU
+                        - ROU
+                        - RUS
+                        - RWA
+                        - BLM
+                        - SHN
+                        - KNA
+                        - LCA
+                        - MAF
+                        - SPM
+                        - VCT
+                        - WSM
+                        - SMR
+                        - STP
+                        - SAU
+                        - SEN
+                        - SRB
+                        - SYC
+                        - SLE
+                        - SGP
+                        - SXM
+                        - SVK
+                        - SVN
+                        - SLB
+                        - SOM
+                        - ZAF
+                        - SGS
+                        - KOR
+                        - SSD
+                        - ESP
+                        - LKA
+                        - SDN
+                        - SUR
+                        - SJM
+                        - SWE
+                        - CHE
+                        - SYR
+                        - TWN
+                        - TJK
+                        - TZA
+                        - THA
+                        - TLS
+                        - TGO
+                        - TKL
+                        - TON
+                        - TTO
+                        - TUN
+                        - TUR
+                        - TKM
+                        - TCA
+                        - TUV
+                        - UGA
+                        - UKR
+                        - ARE
+                        - GBR
+                        - USA
+                        - UMI
+                        - URY
+                        - UZB
+                        - VUT
+                        - VAT
+                        - VEN
+                        - VNM
+                        - VIR
+                        - WLF
+                        - ESH
+                        - YEM
+                        - ZMB
+                        - ZWE
+                        example: USA
+                    state:
+                      allOf:
+                      - description: 'The learner''s state of employment. Two letter state code.
+
+
+                          Validation rules:
+
+                          - Required when country is "USA"
+
+                          - Must be null or omitted for all other countries
+
+                          - Empty strings ("") are not allowed
+
+
+                          Examples:
+
+                          - "USA" + "NY" ✅
+
+                          - "USA" + null ❌
+
+                          - "CAN" + null ✅
+
+                          - "CAN" + "ON" ❌ (Canadian provinces not supported)'
+                        type: string
+                        minLength: 2
+                        maxLength: 2
+                        enum:
+                        - AL
+                        - AK
+                        - AZ
+                        - AR
+                        - CA
+                        - CO
+                        - CT
+                        - DE
+                        - FL
+                        - GA
+                        - HI
+                        - ID
+                        - IL
+                        - IN
+                        - IA
+                        - KS
+                        - KY
+                        - LA
+                        - ME
+                        - MD
+                        - MA
+                        - MI
+                        - MN
+                        - MS
+                        - MO
+                        - MT
+                        - NE
+                        - NV
+                        - NH
+                        - NJ
+                        - NM
+                        - NY
+                        - NC
+                        - ND
+                        - OH
+                        - OK
+                        - OR
+                        - PA
+                        - RI
+                        - SC
+                        - SD
+                        - TN
+                        - TX
+                        - UT
+                        - VT
+                        - VA
+                        - WA
+                        - WV
+                        - WI
+                        - WY
+                        - AS
+                        - DC
+                        - FM
+                        - GU
+                        - MH
+                        - MP
+                        - PW
+                        - PR
+                        - VI
+                        example: NY
+                    isManager:
+                      allOf:
+                      - description: Whether the learner is a manager.
+                        type: boolean
+                        example: true
+                    managerLearnerId:
+                      allOf:
+                      - description: The unique identifier of the learner's manager.
+                        allOf:
+                        - description: The unique identifier of a learner.
+                          type: string
+                          pattern: ^[a-zA-Z0-9]+$
+                          example: abc123def4
+                        example: xyz123abc4
+                    department:
+                      allOf:
+                      - description: The department the learner belongs to.
+                        type: string
+                        maxLength: 255
+                        example: Engineering
+                    workerType:
+                      allOf:
+                      - description: The learner's worker type.
+                        type: string
+                        maxLength: 255
+                        example: Full Time
+                    customCategory:
+                      allOf:
+                      - description: The learner's custom category. Can be populated with any value. For example, the office or city of a learner.
+                        type: string
+                        maxLength: 255
+                        example: Brooklyn
+                    language:
+                      allOf:
+                      - description: "The learner's language. Represented as any Unicode CLDR language documented here: https://cldr.unicode.org/\n\n⚠️ Important: Use language codes (e.g., \"en\"), not language names (e.g., \"English\").\n\n✅ Common valid examples:\n  - \"en\": English\n  - \"es\": Spanish  \n  - \"es-419\": Spanish (Latin America)\n  - \"es-MX\": Spanish (Mexico)\n  - \"zh\": Chinese\n  - \"zh-TW\": Chinese (Taiwan)\n  - \"zh-Hant-HK\": Chinese (traditional, Hong Kong)\n  - \"fr\": French\n  - \"de\": German\n  \n❌ Common invalid examples, which will cause validation errors:\n  - \"English\" (use \"en\" instead)\n  - \"Spanish\" (use \"es\" instead)  \n  - \"Chinese\" (use \"zh\" instead)"
+                        type: string
+                        minLength: 2
+                        maxLength: 32
+                        example: en
+                    trainingUrl:
+                      allOf:
+                      - description: 'The learner-specific link to their Ethena training dashboard.
+
+
+                          For SSO companies, the URL includes the SSO connection parameter.
+
+                          For non-SSO companies, the URL includes the learning center login key.'
+                        type: string
+                        format: uri
+                        example: https://{ethena-domain}/learning?key={uuid}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id006
+                - title
+                properties: &id007
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id006
+                properties: *id007
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id006
+                properties: *id007
+    patch:
+      tags:
+      - Learners
+      summary: Update learner by id
+      description: Update a learner.
+      operationId: patchLearnerById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          description: The unique identifier of a learner.
+          type: string
+          pattern: ^[a-zA-Z0-9]+$
+          example: abc123def4
+      security:
+      - basic_auth: []
+      requestBody:
+        description: Learner properties to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  allOf:
+                  - description: The unique identifier of a learner.
+                    type: string
+                    pattern: ^[a-zA-Z0-9]+$
+                    example: abc123def4
+                name:
+                  allOf:
+                  - description: The learner's full name.
+                    type: string
+                    minLength: 2
+                    maxLength: 100
+                    example: First Last
+                status:
+                  description: 'Status of the learner account. Active learners can access training. Deactivated and terminated learners cannot access training.
+
+                    Note: Learners cannot be deactivated via the API - this is exclusively managed by HRIS integrations.'
+                  type: string
+                  enum:
+                  - ACTIVE
+                  - TERMINATED
+                  example: ACTIVE
+                email:
+                  allOf:
+                  - description: The learner's unique email address.
+                    type: string
+                    format: email
+                    maxLength: 255
+                    example: first.last@{your-domain}.com
+                country:
+                  allOf:
+                  - description: The learner's country of employment. Three letter country code.
+                    type: string
+                    minLength: 3
+                    maxLength: 3
+                    enum:
+                    - AFG
+                    - ALA
+                    - ALB
+                    - DZA
+                    - ASM
+                    - AND
+                    - AGO
+                    - AIA
+                    - ATA
+                    - ATG
+                    - ARG
+                    - ARM
+                    - ABW
+                    - AUS
+                    - AUT
+                    - AZE
+                    - BHS
+                    - BHR
+                    - BGD
+                    - BRB
+                    - BLR
+                    - BEL
+                    - BLZ
+                    - BEN
+                    - BMU
+                    - BTN
+                    - BOL
+                    - BES
+                    - BIH
+                    - BWA
+                    - BVT
+                    - BRA
+                    - IOT
+                    - VGB
+                    - BRN
+                    - BGR
+                    - BFA
+                    - BDI
+                    - CPV
+                    - KHM
+                    - CMR
+                    - CAN
+                    - CYM
+                    - CAF
+                    - TCD
+                    - CHL
+                    - CHN
+                    - CXR
+                    - CCK
+                    - COL
+                    - COM
+                    - COG
+                    - COD
+                    - COK
+                    - CRI
+                    - CIV
+                    - HRV
+                    - CUB
+                    - CUW
+                    - CYP
+                    - CZE
+                    - DNK
+                    - DJI
+                    - DMA
+                    - DOM
+                    - ECU
+                    - EGY
+                    - SLV
+                    - GNQ
+                    - ERI
+                    - EST
+                    - SWZ
+                    - ETH
+                    - FLK
+                    - FRO
+                    - FJI
+                    - FIN
+                    - FRA
+                    - GUF
+                    - PYF
+                    - ATF
+                    - GAB
+                    - GMB
+                    - GEO
+                    - DEU
+                    - GHA
+                    - GIB
+                    - GRC
+                    - GRL
+                    - GRD
+                    - GLP
+                    - GUM
+                    - GTM
+                    - GGY
+                    - GIN
+                    - GNB
+                    - GUY
+                    - HTI
+                    - HMD
+                    - HND
+                    - HKG
+                    - HUN
+                    - ISL
+                    - IND
+                    - IDN
+                    - IRN
+                    - IRQ
+                    - IRL
+                    - IMN
+                    - ISR
+                    - ITA
+                    - JAM
+                    - JPN
+                    - JEY
+                    - JOR
+                    - KAZ
+                    - KEN
+                    - KIR
+                    - KWT
+                    - KGZ
+                    - LAO
+                    - LVA
+                    - LBN
+                    - LSO
+                    - LBR
+                    - LBY
+                    - LIE
+                    - LTU
+                    - LUX
+                    - MAC
+                    - MDG
+                    - MWI
+                    - MYS
+                    - MDV
+                    - MLI
+                    - MLT
+                    - MHL
+                    - MTQ
+                    - MRT
+                    - MUS
+                    - MYT
+                    - MEX
+                    - FSM
+                    - MDA
+                    - MCO
+                    - MNG
+                    - MNE
+                    - MSR
+                    - MAR
+                    - MOZ
+                    - MMR
+                    - NAM
+                    - NRU
+                    - NPL
+                    - NLD
+                    - NCL
+                    - NZL
+                    - NIC
+                    - NER
+                    - NGA
+                    - NIU
+                    - NFK
+                    - PRK
+                    - MKD
+                    - MNP
+                    - NOR
+                    - OMN
+                    - PAK
+                    - PLW
+                    - PSE
+                    - PAN
+                    - PNG
+                    - PRY
+                    - PER
+                    - PHL
+                    - PCN
+                    - POL
+                    - PRT
+                    - PRI
+                    - QAT
+                    - REU
+                    - ROU
+                    - RUS
+                    - RWA
+                    - BLM
+                    - SHN
+                    - KNA
+                    - LCA
+                    - MAF
+                    - SPM
+                    - VCT
+                    - WSM
+                    - SMR
+                    - STP
+                    - SAU
+                    - SEN
+                    - SRB
+                    - SYC
+                    - SLE
+                    - SGP
+                    - SXM
+                    - SVK
+                    - SVN
+                    - SLB
+                    - SOM
+                    - ZAF
+                    - SGS
+                    - KOR
+                    - SSD
+                    - ESP
+                    - LKA
+                    - SDN
+                    - SUR
+                    - SJM
+                    - SWE
+                    - CHE
+                    - SYR
+                    - TWN
+                    - TJK
+                    - TZA
+                    - THA
+                    - TLS
+                    - TGO
+                    - TKL
+                    - TON
+                    - TTO
+                    - TUN
+                    - TUR
+                    - TKM
+                    - TCA
+                    - TUV
+                    - UGA
+                    - UKR
+                    - ARE
+                    - GBR
+                    - USA
+                    - UMI
+                    - URY
+                    - UZB
+                    - VUT
+                    - VAT
+                    - VEN
+                    - VNM
+                    - VIR
+                    - WLF
+                    - ESH
+                    - YEM
+                    - ZMB
+                    - ZWE
+                    example: USA
+                state:
+                  allOf:
+                  - description: 'The learner''s state of employment. Two letter state code.
+
+
+                      Validation rules:
+
+                      - Required when country is "USA"
+
+                      - Must be null or omitted for all other countries
+
+                      - Empty strings ("") are not allowed
+
+
+                      Examples:
+
+                      - "USA" + "NY" ✅
+
+                      - "USA" + null ❌
+
+                      - "CAN" + null ✅
+
+                      - "CAN" + "ON" ❌ (Canadian provinces not supported)'
+                    type: string
+                    minLength: 2
+                    maxLength: 2
+                    enum:
+                    - AL
+                    - AK
+                    - AZ
+                    - AR
+                    - CA
+                    - CO
+                    - CT
+                    - DE
+                    - FL
+                    - GA
+                    - HI
+                    - ID
+                    - IL
+                    - IN
+                    - IA
+                    - KS
+                    - KY
+                    - LA
+                    - ME
+                    - MD
+                    - MA
+                    - MI
+                    - MN
+                    - MS
+                    - MO
+                    - MT
+                    - NE
+                    - NV
+                    - NH
+                    - NJ
+                    - NM
+                    - NY
+                    - NC
+                    - ND
+                    - OH
+                    - OK
+                    - OR
+                    - PA
+                    - RI
+                    - SC
+                    - SD
+                    - TN
+                    - TX
+                    - UT
+                    - VT
+                    - VA
+                    - WA
+                    - WV
+                    - WI
+                    - WY
+                    - AS
+                    - DC
+                    - FM
+                    - GU
+                    - MH
+                    - MP
+                    - PW
+                    - PR
+                    - VI
+                    example: NY
+                isManager:
+                  allOf:
+                  - description: Whether the learner is a manager.
+                    type: boolean
+                    example: true
+                managerLearnerId:
+                  allOf:
+                  - description: The unique identifier of the learner's manager.
+                    allOf:
+                    - description: The unique identifier of a learner.
+                      type: string
+                      pattern: ^[a-zA-Z0-9]+$
+                      example: abc123def4
+                    example: xyz123abc4
+                department:
+                  allOf:
+                  - description: The department the learner belongs to.
+                    type: string
+                    maxLength: 255
+                    example: Engineering
+                workerType:
+                  allOf:
+                  - description: The learner's worker type.
+                    type: string
+                    maxLength: 255
+                    example: Full Time
+                customCategory:
+                  allOf:
+                  - description: The learner's custom category. Can be populated with any value. For example, the office or city of a learner.
+                    type: string
+                    maxLength: 255
+                    example: Brooklyn
+                language:
+                  allOf:
+                  - description: "The learner's language. Represented as any Unicode CLDR language documented here: https://cldr.unicode.org/\n\n⚠️ Important: Use language codes (e.g., \"en\"), not language names (e.g., \"English\").\n\n✅ Common valid examples:\n  - \"en\": English\n  - \"es\": Spanish  \n  - \"es-419\": Spanish (Latin America)\n  - \"es-MX\": Spanish (Mexico)\n  - \"zh\": Chinese\n  - \"zh-TW\": Chinese (Taiwan)\n  - \"zh-Hant-HK\": Chinese (traditional, Hong Kong)\n  - \"fr\": French\n  - \"de\": German\n  \n❌ Common invalid examples, which will cause validation errors:\n  - \"English\" (use \"en\" instead)\n  - \"Spanish\" (use \"es\" instead)  \n  - \"Chinese\" (use \"zh\" instead)"
+                    type: string
+                    minLength: 2
+                    maxLength: 32
+                    example: en
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id008
+                - title
+                properties: &id009
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id008
+                properties: *id009
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id008
+                properties: *id009
+    delete:
+      tags:
+      - Learners
+      summary: Delete a learner by id
+      description: Delete a learner. This is a **hard delete**. The deleted learner will no longer be accessible via the API. This operation is irreversible. If a learner is deleted by mistake, a new learner account will need to be created. If removing access to training is the goal, consider deactivating the learner account instead.
+      operationId: deleteLearnerById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          description: The unique identifier of a learner.
+          type: string
+          pattern: ^[a-zA-Z0-9]+$
+          example: abc123def4
+      security:
+      - basic_auth: []
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id010
+                - title
+                properties: &id011
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id010
+                properties: *id011
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id010
+                properties: *id011
+components:
+  securitySchemes:
+    basic_auth:
+      description: Send requests with the Authorization header that contains the word `Basic` followed by a space and a base64-encoded string of the username and api key, `username:apiKey`.
+      type: http
+      scheme: basic
+x-tagGroups:
+- name: General
+  tags:
+  - Learners
+  - Training Campaigns
+  - Learner Training Campaigns
+  - Learner Training Modules
+  - Webhooks

@@ -1,0 +1,666 @@
+openapi: 3.1.0
+info:
+  version: 1.3.0
+  title: Ethena Learner Training Campaigns Webhooks API
+  termsOfService: https://app.goethena.com/legal-and-privacy
+  contact:
+    name: Contact support
+    email: support@goethena.com
+  x-logo:
+    url: ./ethena-logo.png
+    altText: Ethena logo
+  description: 'The Ethena API allows you to view and manage learners and training information.
+
+
+    # Accessing the API
+
+    In order to get access to our API please work with your sales representative to get an
+
+    API key provisioned and shared with you.
+
+
+    Webhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.
+
+
+    # Changelog
+
+    - **v1.0.0** - Initial release of the API, including learners, training campaigns, learner training campaigns, and learner training modules.
+
+    - **v1.1.0** - Added webhooks operations and support for learner training campaign completed webhook.
+
+    - **v1.2.0** - Remove separate language region property on learner and support Unicode Common Locale Data Repository language formats.
+
+    - **v1.3.0** - Added filter parameters for learners (email, name), learner training modules (learnerStatus, trainingCampaignStatus), and learner training campaigns (learnerStatus, trainingCampaignStatus). Added training campaign status field to training campaigns.'
+servers:
+- url: https://api.goethena.com
+tags:
+- name: Webhooks
+  description: "Webhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.\n\nOnce you have access, webhooks can be managed through the API. Currently, only the following webhooks are supported:\n  - Learner Training Campaign Completed\n\n# Security\n\nRequests to the webhook URL include a header `X-Signature`, which contains a signature of the payload. This signature is generated using the secret key provided when the webhook was created.\n\n## Signature Verification \n\nTo verify the signature of incoming requests, you need the secret key for a webhook. This key can be retrieved by calling `GET /v1/webhooks/{id}` after webhook creation. The secret key is not returned in the create webhook response. This key is used to generate a signature of the payload and compare it with the `X-Signature` header in the request.\n\nThe signature is generated using the **HMAC SHA-256** algorithm. The **secret key** is used as the key, and the **request payload** is used as the data. The resulting HMAC is then converted into a hexadecimal string.\n\nFor example:\n\n```js\nconst crypto = require('crypto');\n\nconst signature = crypto\n  .createHmac('sha256', secretKey) \n  .update(JSON.stringify(payload))\n  .digest('hex');\n```\n\nIn this example:\n\n1. `secretKey` is the secret key that can be retrieved by calling `GET /v1/webhooks/{id}` after webhook creation.\n1. `payload` is the data you receive in the webhook request (usually in JSON format).\n1. The `crypto.createHmac()` function creates a hash object, which uses the SHA-256 algorithm and the `secretKey` as the key.\n1. `update()` adds the stringified payload to the hash.\n1. `digest('hex')` generates the HMAC hash in hexadecimal format, which can be compared to the `X-Signature` header in the request.\n\n\n# Retry Policy\n\nWebhook requests will be attempted up to **three times**, with a retry interval of **five minutes**, before being considered failed.\n\nA **30-second request timeout** is enforced, meaning the webhook request must complete within 30 seconds. If the request exceeds this timeout, the attempt will be considered failed."
+paths:
+  /v1/webhooks:
+    get:
+      tags:
+      - Webhooks
+      summary: Get webhooks
+      description: Get all webhooks.
+      operationId: getWebhooks
+      security:
+      - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                        - id
+                        - type
+                        - url
+                        - secretKey
+                        properties:
+                          id:
+                            allOf:
+                            - description: The unique identifier of a webhook.
+                              type: string
+                              pattern: ^[a-zA-Z0-9]+$
+                              example: wh123abc45
+                          type:
+                            allOf:
+                            - description: The type of webhook. Currently, only one type, `LEARNER_TRAINING_CAMPAIGN_COMPLETED`, is supported.
+                              type: string
+                              enum:
+                              - LEARNER_TRAINING_CAMPAIGN_COMPLETED
+                              example: LEARNER_TRAINING_CAMPAIGN_COMPLETED
+                          url:
+                            allOf:
+                            - description: The url of the callback that will be triggered when the webhook is fired.
+                              type: string
+                              format: uri
+                              maxLength: 2048
+                              example: https://{your-domain}.com/webhooks/ethena
+                          secretKey:
+                            allOf:
+                            - description: The generated secret key that is used to sign requests to the webhook url.
+                              type: string
+                              pattern: ^[a-f0-9]+$
+                              example: a1b2c3d4e5f6789012345678901234567890123456789012345678901234abcd
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id001
+                - title
+                properties: &id002
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id001
+                properties: *id002
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id001
+                properties: *id002
+    post:
+      tags:
+      - Webhooks
+      summary: Create a new webhook
+      description: Create a new webhook.
+      operationId: createWebhook
+      security:
+      - basic_auth: []
+      requestBody:
+        description: Webhook to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - url
+              - type
+              properties:
+                url:
+                  allOf:
+                  - description: The url of the callback that will be triggered when the webhook is fired.
+                    type: string
+                    format: uri
+                    maxLength: 2048
+                    example: https://{your-domain}.com/webhooks/ethena
+                type:
+                  allOf:
+                  - description: The type of webhook. Currently, only one type, `LEARNER_TRAINING_CAMPAIGN_COMPLETED`, is supported.
+                    type: string
+                    enum:
+                    - LEARNER_TRAINING_CAMPAIGN_COMPLETED
+                    example: LEARNER_TRAINING_CAMPAIGN_COMPLETED
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                description: The unique identifier of a webhook.
+                type: string
+                pattern: ^[a-zA-Z0-9]+$
+                example: wh123abc45
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id003
+                - title
+                properties: &id004
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id003
+                properties: *id004
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id003
+                properties: *id004
+  /v1/webhooks/{id}:
+    get:
+      tags:
+      - Webhooks
+      summary: Get a webhook by id
+      description: Get a webhook.
+      operationId: getWebhookById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          description: The unique identifier of a webhook.
+          type: string
+          pattern: ^[a-zA-Z0-9]+$
+          example: wh123abc45
+      security:
+      - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  required:
+                  - id
+                  - type
+                  - url
+                  - secretKey
+                  properties:
+                    id:
+                      allOf:
+                      - description: The unique identifier of a webhook.
+                        type: string
+                        pattern: ^[a-zA-Z0-9]+$
+                        example: wh123abc45
+                    type:
+                      allOf:
+                      - description: The type of webhook. Currently, only one type, `LEARNER_TRAINING_CAMPAIGN_COMPLETED`, is supported.
+                        type: string
+                        enum:
+                        - LEARNER_TRAINING_CAMPAIGN_COMPLETED
+                        example: LEARNER_TRAINING_CAMPAIGN_COMPLETED
+                    url:
+                      allOf:
+                      - description: The url of the callback that will be triggered when the webhook is fired.
+                        type: string
+                        format: uri
+                        maxLength: 2048
+                        example: https://{your-domain}.com/webhooks/ethena
+                    secretKey:
+                      allOf:
+                      - description: The generated secret key that is used to sign requests to the webhook url.
+                        type: string
+                        pattern: ^[a-f0-9]+$
+                        example: a1b2c3d4e5f6789012345678901234567890123456789012345678901234abcd
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id005
+                - title
+                properties: &id006
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id005
+                properties: *id006
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id005
+                properties: *id006
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id005
+                properties: *id006
+    patch:
+      tags:
+      - Webhooks
+      summary: Update webhook by id
+      description: Update a webhook.
+      operationId: patchWebhookById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          description: The unique identifier of a webhook.
+          type: string
+          pattern: ^[a-zA-Z0-9]+$
+          example: wh123abc45
+      security:
+      - basic_auth: []
+      requestBody:
+        description: Webhook properties to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  allOf:
+                  - description: The url of the callback that will be triggered when the webhook is fired.
+                    type: string
+                    format: uri
+                    maxLength: 2048
+                    example: https://{your-domain}.com/webhooks/ethena
+                type:
+                  allOf:
+                  - description: The type of webhook. Currently, only one type, `LEARNER_TRAINING_CAMPAIGN_COMPLETED`, is supported.
+                    type: string
+                    enum:
+                    - LEARNER_TRAINING_CAMPAIGN_COMPLETED
+                    example: LEARNER_TRAINING_CAMPAIGN_COMPLETED
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id007
+                - title
+                properties: &id008
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id007
+                properties: *id008
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id007
+                properties: *id008
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id007
+                properties: *id008
+    delete:
+      tags:
+      - Webhooks
+      summary: Delete a webhook by id
+      description: Delete a webhook. This is a **hard delete**. The deleted webhook will no longer be accessible via the API. This operation is irreversible. If a webhook is deleted by mistake, a new webhook will need to be created.
+      operationId: deleteWebhookById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          description: The unique identifier of a webhook.
+          type: string
+          pattern: ^[a-zA-Z0-9]+$
+          example: wh123abc45
+      security:
+      - basic_auth: []
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id009
+                - title
+                properties: &id010
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id009
+                properties: *id010
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id009
+                properties: *id010
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id009
+                properties: *id010
+  /v1/webhooks/{id}/trigger:
+    post:
+      tags:
+      - Webhooks
+      summary: Trigger a webhook by id
+      description: Trigger a webhook manually, without needing to perform the action that would normally trigger the webhook.
+      operationId: triggerWebhookById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          description: The unique identifier of a webhook.
+          type: string
+          pattern: ^[a-zA-Z0-9]+$
+          example: wh123abc45
+      security:
+      - basic_auth: []
+      requestBody:
+        description: Payload to be sent when making the webhook request.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                learnerId:
+                  allOf:
+                  - description: "The unique identifier of a learner. \n\nRequired when the webhook type is `LEARNER_TRAINING_CAMPAIGN_COMPLETED`."
+                    type: string
+                    pattern: ^[a-zA-Z0-9]+$
+                    example: abc123def4
+                trainingCampaignId:
+                  allOf:
+                  - description: "The unique identifier of a training campaign. \n\nRequired when the webhook type is `LEARNER_TRAINING_CAMPAIGN_COMPLETED`."
+                    type: string
+                    pattern: ^[a-zA-Z0-9]+$
+                    example: tc456xyz78
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &id011
+                - title
+                properties: &id012
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id011
+                properties: *id012
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id011
+                properties: *id012
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *id011
+                properties: *id012
+components:
+  securitySchemes:
+    basic_auth:
+      description: Send requests with the Authorization header that contains the word `Basic` followed by a space and a base64-encoded string of the username and api key, `username:apiKey`.
+      type: http
+      scheme: basic
+x-tagGroups:
+- name: General
+  tags:
+  - Learners
+  - Training Campaigns
+  - Learner Training Campaigns
+  - Learner Training Modules
+  - Webhooks
