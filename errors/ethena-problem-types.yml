@@ -1,0 +1,57 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/ethena-openapi-original.yml
+format: rfc7807
+notes: >-
+  Derived from the 4xx responses declared across the Ethena OpenAPI 3.1
+  definition. All error responses use the RFC 7807 Problem Details JSON object
+  (media type application/json) with a required `title`, optional `detail`, and
+  an `invalid-params` array on validation failures.
+envelope:
+  media_type: application/json
+  required: [title]
+  fields:
+    - name: title
+      description: A short, human-readable summary of the problem type.
+    - name: detail
+      description: A human-readable explanation specific to this occurrence of the problem.
+    - name: invalid-params
+      description: Array of field-level validation issues (present on 400 validation errors).
+problems:
+  - status: 400
+    title: Bad Request
+    description: >-
+      The request was malformed or failed validation. Field-level issues are
+      enumerated in `invalid-params`.
+    applies_to: all operations
+  - status: 401
+    title: Unauthorized
+    description: >-
+      Missing or invalid Basic authentication credentials (username:apiKey).
+    applies_to: all operations
+  - status: 403
+    title: Forbidden
+    description: >-
+      The API key is authenticated but not authorized for the webhooks feature,
+      which must be enabled by an Ethena sales representative.
+    applies_to:
+      - getWebhooks
+      - createWebhook
+      - getWebhookById
+      - patchWebhookById
+      - deleteWebhookById
+      - triggerWebhookById
+  - status: 404
+    title: Not Found
+    description: The referenced resource does not exist.
+    applies_to:
+      - getLearnerById
+      - patchLearnerById
+      - deleteLearnerById
+      - getLearnerTrainingCampaignById
+      - getLearnerTrainingModuleById
+      - getTrainingCampaignById
+      - getWebhookById
+      - patchWebhookById
+      - deleteWebhookById
+      - triggerWebhookById

@@ -1,0 +1,77 @@
+generated: '2026-07-19'
+method: searched
+source: https://api.goethena.com/docs/
+notes: >-
+  Cross-cutting request/response semantics for the Ethena API, captured from the
+  published OpenAPI 3.1 definition (openapi/ethena-openapi-original.yml) and the
+  Redoc developer documentation at https://api.goethena.com/docs/.
+authentication:
+  style: http-basic
+  detail: >-
+    HTTP Basic authentication. The Authorization header carries `Basic ` followed
+    by the base64-encoded string `username:apiKey`. API keys are provisioned by
+    an Ethena sales representative (not self-serve).
+  ref: authentication/ethena-authentication.yml
+pagination:
+  style: cursor
+  request_params:
+    - name: limit
+      in: query
+      default: 25
+      description: Maximum number of records to return in a page.
+    - name: cursor
+      in: query
+      description: Opaque cursor for the next page of results.
+  response_fields:
+    - limit
+    - hasMore
+    - data
+  detail: >-
+    List endpoints return an object with `limit`, `hasMore`, and a `data` array.
+    When `hasMore` is true, pass the appropriate cursor value to retrieve the next
+    page.
+filtering:
+  detail: >-
+    List endpoints accept repeatable array query parameters for server-side
+    filtering, e.g. learners by `id`, `status`, `email`, `name`; learner training
+    modules and learner training campaigns by `learnerStatus` and
+    `trainingCampaignStatus`.
+error_envelope:
+  format: rfc7807
+  media_type: application/json
+  fields: [title, detail, invalid-params]
+  detail: >-
+    Errors are returned as RFC 7807 Problem Details JSON objects with a required
+    `title`, an optional human-readable `detail`, and (on validation errors) an
+    `invalid-params` array.
+  ref: errors/ethena-problem-types.yml
+idempotency:
+  supported: false
+  detail: >-
+    The Ethena API does not document an idempotency-key mechanism. Mutations
+    (POST/PATCH/DELETE) are not declared idempotent beyond HTTP method semantics.
+versioning:
+  scheme: uri-path
+  current: v1
+  api_version: 1.3.0
+  detail: >-
+    The API is versioned in the URL path (all operations under `/v1/`). The
+    OpenAPI `info.version` tracks the semantic API version (currently 1.3.0); a
+    changelog is maintained in the API description.
+  ref: lifecycle/ethena-lifecycle.yml
+webhooks:
+  supported: true
+  detail: >-
+    Webhooks are opt-in (enabled by a sales representative) and managed through
+    the API. Delivered requests carry an `X-Signature` header containing an
+    HMAC SHA-256 hex signature of the payload, computed with the per-webhook
+    secret key retrievable via GET /v1/webhooks/{id}.
+  ref: asyncapi/ethena-webhooks.yml
+rate_limiting:
+  detail: >-
+    No rate-limit headers or published rate-limit policy were found in the
+    OpenAPI definition or developer documentation.
+identifiers:
+  detail: >-
+    Resource identifiers are opaque strings matching `^[a-zA-Z0-9]+$` (e.g.
+    learner id `abc123def4`, training campaign id `tc456xyz78`).

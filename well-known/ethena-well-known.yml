@@ -1,0 +1,43 @@
+generated: '2026-07-19'
+method: searched
+notes: >-
+  Probed the /.well-known/ discovery surface on the API host (api.goethena.com),
+  the marketing host (www.goethena.com), and the app host (app.goethena.com). The
+  only document returned is an RFC 8414 OAuth Authorization Server metadata file on
+  www.goethena.com, which advertises the WordPress MCP server hosted at
+  /wp-json/mcp/v1 (see mcp/ethena-mcp.yml).
+hosts:
+  - host: https://api.goethena.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: https://www.goethena.com
+    documents:
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        file: ethena-oauth-authorization-server.json
+        note: RFC 8414 metadata for the WordPress MCP OAuth server (scope mcp, PKCE S256).
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: https://app.goethena.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404

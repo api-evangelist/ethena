@@ -1,28 +1,300 @@
 aid: ethena
 name: Ethena
-description: 'Ethena is a company surfaced as a portfolio company of homebrew, multicoin-capital and added
-  to the API Evangelist network as a stub for enrichment. Sector: unknown. This profile is a lead awaiting
-  the enrichment pipeline.'
+description: >-
+  Ethena is a compliance platform powered by AI agents that helps organizations
+  manage employee compliance training, disclosure reviews, policy management,
+  third-party risk screening, and ethics/whistleblower reporting for more than
+  2,000 organizations. Its product surface includes a Training Agent, Disclosure
+  Agent, Policy Agent, and Third-Party Risk Agent, an ethics hotline with case
+  management, a phishing simulator, and a library of 200+ compliance courses
+  (AML, harassment prevention, HIPAA, cybersecurity, and more). Ethena publishes
+  a REST API (OpenAPI 3.1, https://api.goethena.com) for viewing and managing
+  learners and training information and for subscribing to training-completion
+  webhooks, alongside SSO, SCIM/HRIS provisioning, and SCORM/LMS export. The
+  platform is SOC 2 Type II certified.
 url: https://raw.githubusercontent.com/api-evangelist/ethena/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - homebrew
 - multicoin-capital
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: real-openapi-harvested
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
+image: https://www.goethena.com/wp-content/uploads/2025/12/Ethenas-Featured-Image.png
 tags:
 - Company
-- Unknown
-apis: []
+- Compliance
+- Training
+- Governance, Risk and Compliance
+- Human Resources
+- Learning Management
+- Workflow
+- Webhooks
+apis:
+- aid: ethena:ethena-learner-training-campaigns-api
+  name: Ethena Learner Training Campaigns API
+  description: Learner training campaign information and operations.
+  humanURL: https://api.goethena.com/docs/
+  baseURL: https://api.goethena.com
+  tags:
+  - Learner Training Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/ethena-learner-training-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.goethena.com/docs/
+  - type: Documentation
+    url: https://help.goethena.com/hc/en-us/articles/28796851013773-Ethena-s-API
+  - type: Authentication
+    url: authentication/ethena-authentication.yml
+  - type: Conventions
+    url: conventions/ethena-conventions.yml
+  - type: ErrorCatalog
+    url: errors/ethena-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/ethena-lifecycle.yml
+  - type: ChangeLog
+    url: changelog/ethena-changelog.yml
+  - type: Conformance
+    url: conformance/ethena-conformance.yml
+  - type: DataModel
+    url: data-model/ethena-data-model.yml
+  - type: AsyncAPI
+    url: asyncapi/ethena-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/ethena-webhooks.yml
+- aid: ethena:ethena-learner-training-modules-api
+  name: Ethena Learner Training Modules API
+  description: Learner training module information and operations.
+  humanURL: https://api.goethena.com/docs/
+  baseURL: https://api.goethena.com
+  tags:
+  - Learner Training Modules
+  properties:
+  - type: OpenAPI
+    url: openapi/ethena-learner-training-modules-api-openapi.yml
+  - type: APIReference
+    url: https://api.goethena.com/docs/
+  - type: Documentation
+    url: https://help.goethena.com/hc/en-us/articles/28796851013773-Ethena-s-API
+  - type: Authentication
+    url: authentication/ethena-authentication.yml
+  - type: Conventions
+    url: conventions/ethena-conventions.yml
+  - type: ErrorCatalog
+    url: errors/ethena-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/ethena-lifecycle.yml
+  - type: ChangeLog
+    url: changelog/ethena-changelog.yml
+  - type: Conformance
+    url: conformance/ethena-conformance.yml
+  - type: DataModel
+    url: data-model/ethena-data-model.yml
+  - type: AsyncAPI
+    url: asyncapi/ethena-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/ethena-webhooks.yml
+- aid: ethena:ethena-learners-api
+  name: Ethena Learners API
+  description: Learner information and operations.
+  humanURL: https://api.goethena.com/docs/
+  baseURL: https://api.goethena.com
+  tags:
+  - Learners
+  properties:
+  - type: OpenAPI
+    url: openapi/ethena-learners-api-openapi.yml
+  - type: APIReference
+    url: https://api.goethena.com/docs/
+  - type: Documentation
+    url: https://help.goethena.com/hc/en-us/articles/28796851013773-Ethena-s-API
+  - type: Authentication
+    url: authentication/ethena-authentication.yml
+  - type: Conventions
+    url: conventions/ethena-conventions.yml
+  - type: ErrorCatalog
+    url: errors/ethena-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/ethena-lifecycle.yml
+  - type: ChangeLog
+    url: changelog/ethena-changelog.yml
+  - type: Conformance
+    url: conformance/ethena-conformance.yml
+  - type: DataModel
+    url: data-model/ethena-data-model.yml
+  - type: AsyncAPI
+    url: asyncapi/ethena-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/ethena-webhooks.yml
+- aid: ethena:ethena-training-campaigns-api
+  name: Ethena Training Campaigns API
+  description: Training campaign information and operations.
+  humanURL: https://api.goethena.com/docs/
+  baseURL: https://api.goethena.com
+  tags:
+  - Training Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/ethena-training-campaigns-api-openapi.yml
+  - type: APIReference
+    url: https://api.goethena.com/docs/
+  - type: Documentation
+    url: https://help.goethena.com/hc/en-us/articles/28796851013773-Ethena-s-API
+  - type: Authentication
+    url: authentication/ethena-authentication.yml
+  - type: Conventions
+    url: conventions/ethena-conventions.yml
+  - type: ErrorCatalog
+    url: errors/ethena-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/ethena-lifecycle.yml
+  - type: ChangeLog
+    url: changelog/ethena-changelog.yml
+  - type: Conformance
+    url: conformance/ethena-conformance.yml
+  - type: DataModel
+    url: data-model/ethena-data-model.yml
+  - type: AsyncAPI
+    url: asyncapi/ethena-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/ethena-webhooks.yml
+- aid: ethena:ethena-webhooks-api
+  name: Ethena Webhooks API
+  description: "Webhooks are not enabled by default, please work with your sales representative to have\
+    \ them enabled if you need them.\n\nOnce you have access, webhooks can be managed through the API.\
+    \ Currently, only the following webhooks are supported:\n  - Learner Training Campaign Completed\n\
+    \n# Security\n\nRequests to the webhook URL include a header `X-Signature`, which contains a signature\
+    \ of the payload. This signature is generated using the secret key provided when the webhook was created.\n\
+    \n## Signature Verification \n\nTo verify the signature of incoming requests, you need the secret\
+    \ key for a webhook. This key can be retrieved by calling `GET /v1/webhooks/{id}` after webhook creation.\
+    \ The secret key is not returned in the create webhook response. This key is used to generate a signature\
+    \ of the payload and compare it with the `X-Signature` header in the request.\n\nThe signature is\
+    \ generated using the **HMAC SHA-256** algorithm. The **secret key** is used as the key, and the **request\
+    \ payload** is used as the data. The resulting HMAC is then converted into a hexadecimal string.\n\
+    \nFor example:\n\n```js\nconst crypto = require('crypto');\n\nconst signature = crypto\n  .createHmac('sha256',\
+    \ secretKey) \n  .update(JSON.stringify(payload))\n  .digest('hex');\n```\n\nIn this example:\n\n\
+    1. `secretKey` is the secret key that can be retrieved by calling `GET /v1/webhooks/{id}` after webhook\
+    \ creation.\n1. `payload` is the data you receive in the webhook request (usually in JSON format).\n\
+    1. The `crypto.createHmac()` function creates a hash object, which uses the SHA-256 algorithm and\
+    \ the `secretKey` as the key.\n1. `update()` adds the stringified payload to the hash.\n1. `digest('hex')`\
+    \ generates the HMAC hash in hexadecimal format, which can be compared to the `X-Signature` header\
+    \ in the request.\n\n\n# Retry Policy\n\nWebhook requests will be attempted up to **three times**,\
+    \ with a retry interval of **five minutes**, before being considered failed.\n\nA **30-second request\
+    \ timeout** is enforced, meaning the webhook request must complete within 30 seconds. If the request\
+    \ exceeds this timeout, the attempt will be considered failed."
+  humanURL: https://api.goethena.com/docs/
+  baseURL: https://api.goethena.com
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/ethena-webhooks-api-openapi.yml
+  - type: APIReference
+    url: https://api.goethena.com/docs/
+  - type: Documentation
+    url: https://help.goethena.com/hc/en-us/articles/28796851013773-Ethena-s-API
+  - type: Authentication
+    url: authentication/ethena-authentication.yml
+  - type: Conventions
+    url: conventions/ethena-conventions.yml
+  - type: ErrorCatalog
+    url: errors/ethena-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/ethena-lifecycle.yml
+  - type: ChangeLog
+    url: changelog/ethena-changelog.yml
+  - type: Conformance
+    url: conformance/ethena-conformance.yml
+  - type: DataModel
+    url: data-model/ethena-data-model.yml
+  - type: AsyncAPI
+    url: asyncapi/ethena-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/ethena-webhooks.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DeveloperPortal
+  url: https://api.goethena.com/docs/
+- type: Documentation
+  url: https://help.goethena.com/hc/en-us/articles/28796851013773-Ethena-s-API
+- type: APIReference
+  url: https://api.goethena.com/docs/
+- type: Authentication
+  url: authentication/ethena-authentication.yml
+- type: Conventions
+  url: conventions/ethena-conventions.yml
+- type: ErrorCatalog
+  url: errors/ethena-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/ethena-lifecycle.yml
+- type: StatusPage
+  url: https://status.goethena.com
+- type: ChangeLog
+  url: changelog/ethena-changelog.yml
+- type: Conformance
+  url: conformance/ethena-conformance.yml
+- type: Compliance
+  url: https://www.goethena.com/post/ethena-completes-soc-2-type-2-examination/
+- type: DataModel
+  url: data-model/ethena-data-model.yml
+- type: AsyncAPI
+  url: asyncapi/ethena-asyncapi.yml
+- type: Webhooks
+  url: asyncapi/ethena-webhooks.yml
+- type: MCPServer
+  url: mcp/ethena-mcp.yml
+- type: WellKnown
+  url: well-known/ethena-well-known.yml
+- type: LLMsTxt
+  url: llms/ethena-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/ethena-agentic-access.yml
+- type: Overlay
+  url: overlays/ethena-openapi-overlay.yaml
+- type: AuthenticationDocs
+  url: https://help.goethena.com/hc/en-us/articles/28796851013773-Ethena-s-API
+- type: DomainSecurity
+  url: security/ethena-domain-security.yml
+- type: GitHubOrganization
+  url: https://github.com/goethena
+- type: Integrations
+  url: https://www.goethena.com/platform/integrations/
+- type: Pricing
+  url: https://www.goethena.com/pricing
+- type: Blog
+  url: https://www.goethena.com/blog
+- type: Support
+  url: https://help.goethena.com/hc/en-us
+- type: TermsOfService
+  url: https://app.goethena.com/legal-and-privacy
+- type: PrivacyPolicy
+  url: https://www.goethena.com/legal/privacy-policy
 - type: Website
   url: https://www.goethena.com
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

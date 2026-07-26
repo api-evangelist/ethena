@@ -1,0 +1,51 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/ethena-openapi-original.yml
+notes: >-
+  Entity-relationship graph derived from the Ethena OpenAPI 3.1 definition
+  (inline schemas) and the id-reference fields on webhook and list payloads.
+  Identifiers are opaque strings matching ^[a-zA-Z0-9]+$.
+entities:
+  - name: Learner
+    id_field: id
+    id_example: abc123def4
+    endpoints: [getLearners, createLearner, getLearnerById, patchLearnerById, deleteLearnerById]
+    key_fields: [id, name, email, status, country, isManager, language, trainingUrl]
+  - name: TrainingCampaign
+    id_field: id
+    id_example: tc456xyz78
+    endpoints: [getTrainingCampaigns, getTrainingCampaignById]
+    key_fields: [id, status]
+  - name: LearnerTrainingCampaign
+    id_field: id
+    endpoints: [getLearnerTrainingCampaigns, getLearnerTrainingCampaignById]
+    key_fields: [learnerId, trainingCampaignId, learnerStatus]
+  - name: LearnerTrainingModule
+    id_field: id
+    endpoints: [getLearnerTrainingModules, getLearnerTrainingModuleById]
+    key_fields: [learnerId, learnerStatus, trainingCampaignStatus]
+  - name: Webhook
+    id_field: id
+    endpoints: [getWebhooks, createWebhook, getWebhookById, patchWebhookById, deleteWebhookById, triggerWebhookById]
+    key_fields: [id, url, secretKey]
+relationships:
+  - from: LearnerTrainingCampaign
+    to: Learner
+    type: belongs_to
+    via: learnerId
+  - from: LearnerTrainingCampaign
+    to: TrainingCampaign
+    type: belongs_to
+    via: trainingCampaignId
+  - from: LearnerTrainingModule
+    to: Learner
+    type: belongs_to
+    via: learnerId
+  - from: Learner
+    to: LearnerTrainingCampaign
+    type: has_many
+    via: learnerId
+  - from: TrainingCampaign
+    to: LearnerTrainingCampaign
+    type: has_many
+    via: trainingCampaignId

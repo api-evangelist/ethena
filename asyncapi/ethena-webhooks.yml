@@ -1,0 +1,46 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/ethena-openapi-original.yml
+spec_type: Webhooks
+notes: >-
+  Webhook catalog derived from the `webhooks` block and the Webhooks tag of the
+  Ethena OpenAPI 3.1 definition. Webhooks are opt-in (enabled by an Ethena sales
+  representative) and managed through the API (GET/POST/PATCH/DELETE
+  /v1/webhooks, POST /v1/webhooks/{id}/trigger).
+delivery:
+  method: POST
+  content_type: application/json
+security:
+  signature_header: X-Signature
+  algorithm: HMAC SHA-256
+  encoding: hex
+  detail: >-
+    Each delivery includes an X-Signature header containing the HMAC SHA-256 hex
+    signature of the raw request payload, keyed with the per-webhook secret. The
+    secret is not returned by createWebhook; retrieve it via GET /v1/webhooks/{id}.
+management_operations:
+  - getWebhooks
+  - createWebhook
+  - getWebhookById
+  - patchWebhookById
+  - deleteWebhookById
+  - triggerWebhookById
+events:
+  - name: learnerTrainingCampaignCompleted
+    operation_id: learnerTrainingCampaignCompletedWebhook
+    description: Fires when a learner completes a training campaign.
+    payload:
+      required: [learnerId, trainingCampaignId, statusTimestamp]
+      properties:
+        learnerId:
+          type: string
+          description: The unique identifier of a learner.
+          example: abc123def4
+        trainingCampaignId:
+          type: string
+          description: The unique identifier of a training campaign.
+          example: tc456xyz78
+        statusTimestamp:
+          type: string
+          format: date-time
+          description: When the learner completed the training campaign.

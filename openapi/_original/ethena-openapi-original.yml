@@ -1,0 +1,2053 @@
+openapi: 3.1.0
+info:
+  version: 1.3.0
+  title: Ethena API
+  termsOfService: https://app.goethena.com/legal-and-privacy
+  contact:
+    name: Contact support
+    email: support@goethena.com
+  x-logo:
+    url: ./ethena-logo.png
+    altText: Ethena logo
+  description: |-
+    The Ethena API allows you to view and manage learners and training information.
+
+    # Accessing the API
+    In order to get access to our API please work with your sales representative to get an
+    API key provisioned and shared with you.
+
+    Webhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.
+
+    # Changelog
+    - **v1.0.0** - Initial release of the API, including learners, training campaigns, learner training campaigns, and learner training modules.
+    - **v1.1.0** - Added webhooks operations and support for learner training campaign completed webhook.
+    - **v1.2.0** - Remove separate language region property on learner and support Unicode Common Locale Data Repository language formats.
+    - **v1.3.0** - Added filter parameters for learners (email, name), learner training modules (learnerStatus, trainingCampaignStatus), and learner training campaigns (learnerStatus, trainingCampaignStatus). Added training campaign status field to training campaigns.
+servers:
+  - url: https://api.goethena.com
+tags:
+  - name: Learners
+    description: Learner information and operations.
+  - name: Training Campaigns
+    description: Training campaign information and operations.
+  - name: Learner Training Campaigns
+    description: Learner training campaign information and operations.
+  - name: Learner Training Modules
+    description: Learner training module information and operations.
+  - name: Webhooks
+    description: |-
+      Webhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.
+
+      Once you have access, webhooks can be managed through the API. Currently, only the following webhooks are supported:
+        - Learner Training Campaign Completed
+
+      # Security
+
+      Requests to the webhook URL include a header `X-Signature`, which contains a signature of the payload. This signature is generated using the secret key provided when the webhook was created.
+
+      ## Signature Verification 
+
+      To verify the signature of incoming requests, you need the secret key for a webhook. This key can be retrieved by calling `GET /v1/webhooks/{id}` after webhook creation. The secret key is not returned in the create webhook response. This key is used to generate a signature of the payload and compare it with the `X-Signature` header in the request.
+
+      The signature is generated using the **HMAC SHA-256** algorithm. The **secret key** is used as the key, and the **request payload** is used as the data. The resulting HMAC is then converted into a hexadecimal string.
+
+      For example:
+
+      ```js
+      const crypto = require('crypto');
+
+      const signature = crypto
+        .createHmac('sha256', secretKey) 
+        .update(JSON.stringify(payload))
+        .digest('hex');
+      ```
+
+      In this example:
+
+      1. `secretKey` is the secret key that can be retrieved by calling `GET /v1/webhooks/{id}` after webhook creation.
+      1. `payload` is the data you receive in the webhook request (usually in JSON format).
+      1. The `crypto.createHmac()` function creates a hash object, which uses the SHA-256 algorithm and the `secretKey` as the key.
+      1. `update()` adds the stringified payload to the hash.
+      1. `digest('hex')` generates the HMAC hash in hexadecimal format, which can be compared to the `X-Signature` header in the request.
+
+
+      # Retry Policy
+
+      Webhook requests will be attempted up to **three times**, with a retry interval of **five minutes**, before being considered failed.
+
+      A **30-second request timeout** is enforced, meaning the webhook request must complete within 30 seconds. If the request exceeds this timeout, the attempt will be considered failed.
+paths:
+  /v1/learners:
+    get:
+      tags:
+        - Learners
+      summary: Get learners
+      description: |-
+        Get many learners.
+
+        The query parameter filters are applied as `AND` conditions across different filters. 
+        If multiple filters are used, the response will include only the learners that satisfy all the filters.
+
+        Within a single filter, multiple values are applied as `OR` conditions.
+      operationId: getLearners
+      parameters:
+        - name: id
+          in: query
+          description: Use this parameter to filter learners by id.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The unique identifier of a learner.
+              type: string
+              pattern: ^[a-zA-Z0-9]+$
+              example: abc123def4
+          example:
+            - abc123def4
+            - xyz123abc4
+        - name: status
+          in: query
+          description: Use this parameter to filter learners by status. By default, all statuses are returned.
+          schema:
+            type: array
+            items:
+              description: Status of the learner account. Active learners can access training. Deactivated and terminated learners cannot access training.
+              type: string
+              enum: &ref_0
+                - ACTIVE
+                - DEACTIVATED
+                - TERMINATED
+              example: ACTIVE
+          example:
+            - ACTIVE
+        - name: email
+          in: query
+          description: Use this parameter to filter learners by exact email match within the tenant.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              type: string
+              format: email
+          example:
+            - first.last@your-domain.com
+        - name: name
+          in: query
+          description: Use this parameter to filter learners by exact name match.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              type: string
+              minLength: 2
+              maxLength: 100
+          example:
+            - First Last
+        - name: limit
+          in: query
+          description: Use this parameter to limit the number of entities returned.
+          schema: &ref_11
+            type: integer
+            minimum: 1
+            default: 25
+            maximum: 100
+        - example: abc123def25
+          name: cursor
+          in: query
+          description: |-
+            Use this parameter to paginate through entities. The cursor is the `id` of the last entity you want to start from.
+
+            To get the first page, omit this parameter. 
+
+            To get the next page, use the `id` of the last entity from the previous response. Continue paginating while `hasMore` is `true` in the response.
+
+            Example workflow:
+            1. GET /v1/{endpoint} → returns data + hasMore: true, last entity id: "xyz789end"
+            2. GET /v1/{endpoint}?cursor=xyz789end → returns next page
+          schema: &ref_12
+            type: string
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties: &ref_13
+                      limit:
+                        type: integer
+                      hasMore:
+                        type: boolean
+                      data:
+                        type: array
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          required: &ref_8
+                            - id
+                            - name
+                            - email
+                            - status
+                            - country
+                            - isManager
+                            - language
+                            - trainingUrl
+                          properties: &ref_9
+                            id:
+                              allOf:
+                                - description: The unique identifier of a learner.
+                                  type: string
+                                  pattern: ^[a-zA-Z0-9]+$
+                                  example: abc123def4
+                            name:
+                              allOf:
+                                - description: The learner's full name.
+                                  type: string
+                                  minLength: 2
+                                  maxLength: 100
+                                  example: First Last
+                            status:
+                              allOf:
+                                - description: Status of the learner account. Active learners can access training. Deactivated and terminated learners cannot access training.
+                                  type: string
+                                  enum: *ref_0
+                                  example: ACTIVE
+                            email:
+                              allOf:
+                                - description: The learner's unique email address.
+                                  type: string
+                                  format: email
+                                  maxLength: 255
+                                  example: first.last@{your-domain}.com
+                            country:
+                              allOf:
+                                - description: The learner's country of employment. Three letter country code.
+                                  type: string
+                                  minLength: 3
+                                  maxLength: 3
+                                  enum: &ref_3
+                                    - AFG
+                                    - ALA
+                                    - ALB
+                                    - DZA
+                                    - ASM
+                                    - AND
+                                    - AGO
+                                    - AIA
+                                    - ATA
+                                    - ATG
+                                    - ARG
+                                    - ARM
+                                    - ABW
+                                    - AUS
+                                    - AUT
+                                    - AZE
+                                    - BHS
+                                    - BHR
+                                    - BGD
+                                    - BRB
+                                    - BLR
+                                    - BEL
+                                    - BLZ
+                                    - BEN
+                                    - BMU
+                                    - BTN
+                                    - BOL
+                                    - BES
+                                    - BIH
+                                    - BWA
+                                    - BVT
+                                    - BRA
+                                    - IOT
+                                    - VGB
+                                    - BRN
+                                    - BGR
+                                    - BFA
+                                    - BDI
+                                    - CPV
+                                    - KHM
+                                    - CMR
+                                    - CAN
+                                    - CYM
+                                    - CAF
+                                    - TCD
+                                    - CHL
+                                    - CHN
+                                    - CXR
+                                    - CCK
+                                    - COL
+                                    - COM
+                                    - COG
+                                    - COD
+                                    - COK
+                                    - CRI
+                                    - CIV
+                                    - HRV
+                                    - CUB
+                                    - CUW
+                                    - CYP
+                                    - CZE
+                                    - DNK
+                                    - DJI
+                                    - DMA
+                                    - DOM
+                                    - ECU
+                                    - EGY
+                                    - SLV
+                                    - GNQ
+                                    - ERI
+                                    - EST
+                                    - SWZ
+                                    - ETH
+                                    - FLK
+                                    - FRO
+                                    - FJI
+                                    - FIN
+                                    - FRA
+                                    - GUF
+                                    - PYF
+                                    - ATF
+                                    - GAB
+                                    - GMB
+                                    - GEO
+                                    - DEU
+                                    - GHA
+                                    - GIB
+                                    - GRC
+                                    - GRL
+                                    - GRD
+                                    - GLP
+                                    - GUM
+                                    - GTM
+                                    - GGY
+                                    - GIN
+                                    - GNB
+                                    - GUY
+                                    - HTI
+                                    - HMD
+                                    - HND
+                                    - HKG
+                                    - HUN
+                                    - ISL
+                                    - IND
+                                    - IDN
+                                    - IRN
+                                    - IRQ
+                                    - IRL
+                                    - IMN
+                                    - ISR
+                                    - ITA
+                                    - JAM
+                                    - JPN
+                                    - JEY
+                                    - JOR
+                                    - KAZ
+                                    - KEN
+                                    - KIR
+                                    - KWT
+                                    - KGZ
+                                    - LAO
+                                    - LVA
+                                    - LBN
+                                    - LSO
+                                    - LBR
+                                    - LBY
+                                    - LIE
+                                    - LTU
+                                    - LUX
+                                    - MAC
+                                    - MDG
+                                    - MWI
+                                    - MYS
+                                    - MDV
+                                    - MLI
+                                    - MLT
+                                    - MHL
+                                    - MTQ
+                                    - MRT
+                                    - MUS
+                                    - MYT
+                                    - MEX
+                                    - FSM
+                                    - MDA
+                                    - MCO
+                                    - MNG
+                                    - MNE
+                                    - MSR
+                                    - MAR
+                                    - MOZ
+                                    - MMR
+                                    - NAM
+                                    - NRU
+                                    - NPL
+                                    - NLD
+                                    - NCL
+                                    - NZL
+                                    - NIC
+                                    - NER
+                                    - NGA
+                                    - NIU
+                                    - NFK
+                                    - PRK
+                                    - MKD
+                                    - MNP
+                                    - NOR
+                                    - OMN
+                                    - PAK
+                                    - PLW
+                                    - PSE
+                                    - PAN
+                                    - PNG
+                                    - PRY
+                                    - PER
+                                    - PHL
+                                    - PCN
+                                    - POL
+                                    - PRT
+                                    - PRI
+                                    - QAT
+                                    - REU
+                                    - ROU
+                                    - RUS
+                                    - RWA
+                                    - BLM
+                                    - SHN
+                                    - KNA
+                                    - LCA
+                                    - MAF
+                                    - SPM
+                                    - VCT
+                                    - WSM
+                                    - SMR
+                                    - STP
+                                    - SAU
+                                    - SEN
+                                    - SRB
+                                    - SYC
+                                    - SLE
+                                    - SGP
+                                    - SXM
+                                    - SVK
+                                    - SVN
+                                    - SLB
+                                    - SOM
+                                    - ZAF
+                                    - SGS
+                                    - KOR
+                                    - SSD
+                                    - ESP
+                                    - LKA
+                                    - SDN
+                                    - SUR
+                                    - SJM
+                                    - SWE
+                                    - CHE
+                                    - SYR
+                                    - TWN
+                                    - TJK
+                                    - TZA
+                                    - THA
+                                    - TLS
+                                    - TGO
+                                    - TKL
+                                    - TON
+                                    - TTO
+                                    - TUN
+                                    - TUR
+                                    - TKM
+                                    - TCA
+                                    - TUV
+                                    - UGA
+                                    - UKR
+                                    - ARE
+                                    - GBR
+                                    - USA
+                                    - UMI
+                                    - URY
+                                    - UZB
+                                    - VUT
+                                    - VAT
+                                    - VEN
+                                    - VNM
+                                    - VIR
+                                    - WLF
+                                    - ESH
+                                    - YEM
+                                    - ZMB
+                                    - ZWE
+                                  example: USA
+                            state:
+                              allOf:
+                                - description: |-
+                                    The learner's state of employment. Two letter state code.
+
+                                    Validation rules:
+                                    - Required when country is "USA"
+                                    - Must be null or omitted for all other countries
+                                    - Empty strings ("") are not allowed
+
+                                    Examples:
+                                    - "USA" + "NY" ✅
+                                    - "USA" + null ❌
+                                    - "CAN" + null ✅
+                                    - "CAN" + "ON" ❌ (Canadian provinces not supported)
+                                  type: string
+                                  minLength: 2
+                                  maxLength: 2
+                                  enum: &ref_4
+                                    - AL
+                                    - AK
+                                    - AZ
+                                    - AR
+                                    - CA
+                                    - CO
+                                    - CT
+                                    - DE
+                                    - FL
+                                    - GA
+                                    - HI
+                                    - ID
+                                    - IL
+                                    - IN
+                                    - IA
+                                    - KS
+                                    - KY
+                                    - LA
+                                    - ME
+                                    - MD
+                                    - MA
+                                    - MI
+                                    - MN
+                                    - MS
+                                    - MO
+                                    - MT
+                                    - NE
+                                    - NV
+                                    - NH
+                                    - NJ
+                                    - NM
+                                    - NY
+                                    - NC
+                                    - ND
+                                    - OH
+                                    - OK
+                                    - OR
+                                    - PA
+                                    - RI
+                                    - SC
+                                    - SD
+                                    - TN
+                                    - TX
+                                    - UT
+                                    - VT
+                                    - VA
+                                    - WA
+                                    - WV
+                                    - WI
+                                    - WY
+                                    - AS
+                                    - DC
+                                    - FM
+                                    - GU
+                                    - MH
+                                    - MP
+                                    - PW
+                                    - PR
+                                    - VI
+                                  example: NY
+                            isManager:
+                              allOf:
+                                - description: Whether the learner is a manager.
+                                  type: boolean
+                                  example: true
+                            managerLearnerId:
+                              allOf:
+                                - description: The unique identifier of the learner's manager.
+                                  allOf: &ref_5
+                                    - description: The unique identifier of a learner.
+                                      type: string
+                                      pattern: ^[a-zA-Z0-9]+$
+                                      example: abc123def4
+                                  example: xyz123abc4
+                            department:
+                              allOf:
+                                - description: The department the learner belongs to.
+                                  type: string
+                                  maxLength: 255
+                                  example: Engineering
+                            workerType:
+                              allOf:
+                                - description: The learner's worker type.
+                                  type: string
+                                  maxLength: 255
+                                  example: Full Time
+                            customCategory:
+                              allOf:
+                                - description: The learner's custom category. Can be populated with any value. For example, the office or city of a learner.
+                                  type: string
+                                  maxLength: 255
+                                  example: Brooklyn
+                            language:
+                              allOf:
+                                - description: |-
+                                    The learner's language. Represented as any Unicode CLDR language documented here: https://cldr.unicode.org/
+
+                                    ⚠️ Important: Use language codes (e.g., "en"), not language names (e.g., "English").
+
+                                    ✅ Common valid examples:
+                                      - "en": English
+                                      - "es": Spanish  
+                                      - "es-419": Spanish (Latin America)
+                                      - "es-MX": Spanish (Mexico)
+                                      - "zh": Chinese
+                                      - "zh-TW": Chinese (Taiwan)
+                                      - "zh-Hant-HK": Chinese (traditional, Hong Kong)
+                                      - "fr": French
+                                      - "de": German
+                                      
+                                    ❌ Common invalid examples, which will cause validation errors:
+                                      - "English" (use "en" instead)
+                                      - "Spanish" (use "es" instead)  
+                                      - "Chinese" (use "zh" instead)
+                                  type: string
+                                  minLength: 2
+                                  maxLength: 32
+                                  example: en
+                            trainingUrl:
+                              allOf:
+                                - description: |-
+                                    The learner-specific link to their Ethena training dashboard.
+
+                                    For SSO companies, the URL includes the SSO connection parameter.
+                                    For non-SSO companies, the URL includes the learning center login key.
+                                  type: string
+                                  format: uri
+                                  example: https://{ethena-domain}/learning?key={uuid}
+        '400':
+          description: Bad Request
+          content: &ref_6
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: &ref_1
+                  - title
+                properties: &ref_2
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+        '401':
+          description: Unauthorized
+          content: &ref_7
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *ref_1
+                properties: *ref_2
+    post:
+      tags:
+        - Learners
+      summary: Create a new learner
+      description: Create a new learner.
+      operationId: createLearner
+      security:
+        - basic_auth: []
+      requestBody:
+        description: Learner to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - country
+                - isManager
+                - language
+              properties:
+                name:
+                  allOf:
+                    - description: The learner's full name.
+                      type: string
+                      minLength: 2
+                      maxLength: 100
+                      example: First Last
+                email:
+                  allOf:
+                    - description: The learner's unique email address.
+                      type: string
+                      format: email
+                      maxLength: 255
+                      example: first.last@{your-domain}.com
+                country:
+                  allOf:
+                    - description: The learner's country of employment. Three letter country code.
+                      type: string
+                      minLength: 3
+                      maxLength: 3
+                      enum: *ref_3
+                      example: USA
+                state:
+                  allOf:
+                    - description: |-
+                        The learner's state of employment. Two letter state code.
+
+                        Validation rules:
+                        - Required when country is "USA"
+                        - Must be null or omitted for all other countries
+                        - Empty strings ("") are not allowed
+
+                        Examples:
+                        - "USA" + "NY" ✅
+                        - "USA" + null ❌
+                        - "CAN" + null ✅
+                        - "CAN" + "ON" ❌ (Canadian provinces not supported)
+                      type: string
+                      minLength: 2
+                      maxLength: 2
+                      enum: *ref_4
+                      example: NY
+                isManager:
+                  allOf:
+                    - description: Whether the learner is a manager.
+                      type: boolean
+                      example: true
+                managerLearnerId:
+                  allOf:
+                    - description: The unique identifier of the learner's manager.
+                      allOf: *ref_5
+                      example: xyz123abc4
+                department:
+                  allOf:
+                    - description: The department the learner belongs to.
+                      type: string
+                      maxLength: 255
+                      example: Engineering
+                workerType:
+                  allOf:
+                    - description: The learner's worker type.
+                      type: string
+                      maxLength: 255
+                      example: Full Time
+                customCategory:
+                  allOf:
+                    - description: The learner's custom category. Can be populated with any value. For example, the office or city of a learner.
+                      type: string
+                      maxLength: 255
+                      example: Brooklyn
+                language:
+                  allOf:
+                    - description: |-
+                        The learner's language. Represented as any Unicode CLDR language documented here: https://cldr.unicode.org/
+
+                        ⚠️ Important: Use language codes (e.g., "en"), not language names (e.g., "English").
+
+                        ✅ Common valid examples:
+                          - "en": English
+                          - "es": Spanish  
+                          - "es-419": Spanish (Latin America)
+                          - "es-MX": Spanish (Mexico)
+                          - "zh": Chinese
+                          - "zh-TW": Chinese (Taiwan)
+                          - "zh-Hant-HK": Chinese (traditional, Hong Kong)
+                          - "fr": French
+                          - "de": German
+                          
+                        ❌ Common invalid examples, which will cause validation errors:
+                          - "English" (use "en" instead)
+                          - "Spanish" (use "es" instead)  
+                          - "Chinese" (use "zh" instead)
+                      type: string
+                      minLength: 2
+                      maxLength: 32
+                      example: en
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                properties:
+                  id:
+                    allOf:
+                      - description: The unique identifier of a learner.
+                        type: string
+                        pattern: ^[a-zA-Z0-9]+$
+                        example: abc123def4
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+  /v1/learners/{id}:
+    get:
+      tags:
+        - Learners
+      summary: Get a learner by id
+      description: Get a learner.
+      operationId: getLearnerById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: The unique identifier of a learner.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: abc123def4
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    required: *ref_8
+                    properties: *ref_9
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '404':
+          description: Not Found
+          content: &ref_10
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *ref_1
+                properties: *ref_2
+    patch:
+      tags:
+        - Learners
+      summary: Update learner by id
+      description: Update a learner.
+      operationId: patchLearnerById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: The unique identifier of a learner.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: abc123def4
+      security:
+        - basic_auth: []
+      requestBody:
+        description: Learner properties to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  allOf:
+                    - description: The unique identifier of a learner.
+                      type: string
+                      pattern: ^[a-zA-Z0-9]+$
+                      example: abc123def4
+                name:
+                  allOf:
+                    - description: The learner's full name.
+                      type: string
+                      minLength: 2
+                      maxLength: 100
+                      example: First Last
+                status:
+                  description: |-
+                    Status of the learner account. Active learners can access training. Deactivated and terminated learners cannot access training.
+                    Note: Learners cannot be deactivated via the API - this is exclusively managed by HRIS integrations.
+                  type: string
+                  enum:
+                    - ACTIVE
+                    - TERMINATED
+                  example: ACTIVE
+                email:
+                  allOf:
+                    - description: The learner's unique email address.
+                      type: string
+                      format: email
+                      maxLength: 255
+                      example: first.last@{your-domain}.com
+                country:
+                  allOf:
+                    - description: The learner's country of employment. Three letter country code.
+                      type: string
+                      minLength: 3
+                      maxLength: 3
+                      enum: *ref_3
+                      example: USA
+                state:
+                  allOf:
+                    - description: |-
+                        The learner's state of employment. Two letter state code.
+
+                        Validation rules:
+                        - Required when country is "USA"
+                        - Must be null or omitted for all other countries
+                        - Empty strings ("") are not allowed
+
+                        Examples:
+                        - "USA" + "NY" ✅
+                        - "USA" + null ❌
+                        - "CAN" + null ✅
+                        - "CAN" + "ON" ❌ (Canadian provinces not supported)
+                      type: string
+                      minLength: 2
+                      maxLength: 2
+                      enum: *ref_4
+                      example: NY
+                isManager:
+                  allOf:
+                    - description: Whether the learner is a manager.
+                      type: boolean
+                      example: true
+                managerLearnerId:
+                  allOf:
+                    - description: The unique identifier of the learner's manager.
+                      allOf: *ref_5
+                      example: xyz123abc4
+                department:
+                  allOf:
+                    - description: The department the learner belongs to.
+                      type: string
+                      maxLength: 255
+                      example: Engineering
+                workerType:
+                  allOf:
+                    - description: The learner's worker type.
+                      type: string
+                      maxLength: 255
+                      example: Full Time
+                customCategory:
+                  allOf:
+                    - description: The learner's custom category. Can be populated with any value. For example, the office or city of a learner.
+                      type: string
+                      maxLength: 255
+                      example: Brooklyn
+                language:
+                  allOf:
+                    - description: |-
+                        The learner's language. Represented as any Unicode CLDR language documented here: https://cldr.unicode.org/
+
+                        ⚠️ Important: Use language codes (e.g., "en"), not language names (e.g., "English").
+
+                        ✅ Common valid examples:
+                          - "en": English
+                          - "es": Spanish  
+                          - "es-419": Spanish (Latin America)
+                          - "es-MX": Spanish (Mexico)
+                          - "zh": Chinese
+                          - "zh-TW": Chinese (Taiwan)
+                          - "zh-Hant-HK": Chinese (traditional, Hong Kong)
+                          - "fr": French
+                          - "de": German
+                          
+                        ❌ Common invalid examples, which will cause validation errors:
+                          - "English" (use "en" instead)
+                          - "Spanish" (use "es" instead)  
+                          - "Chinese" (use "zh" instead)
+                      type: string
+                      minLength: 2
+                      maxLength: 32
+                      example: en
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '404':
+          description: Not Found
+          content: *ref_10
+    delete:
+      tags:
+        - Learners
+      summary: Delete a learner by id
+      description: Delete a learner. This is a **hard delete**. The deleted learner will no longer be accessible via the API. This operation is irreversible. If a learner is deleted by mistake, a new learner account will need to be created. If removing access to training is the goal, consider deactivating the learner account instead.
+      operationId: deleteLearnerById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: The unique identifier of a learner.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: abc123def4
+      security:
+        - basic_auth: []
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '404':
+          description: Not Found
+          content: *ref_10
+  /v1/learner-training-campaigns:
+    get:
+      tags:
+        - Learner Training Campaigns
+      summary: Get learner training campaigns
+      description: |-
+        Get many learner training campaigns. Only learner training campaigns for `ACTIVE` training campaigns are included in the response.
+
+        The query parameter filters are applied as `AND` conditions across different filters. 
+        If multiple filters are used, the response will include only the learner training campaigns that satisfy all the filters.
+
+        Within a single filter, multiple values are applied as `OR` conditions.
+      operationId: getLearnerTrainingCampaigns
+      parameters:
+        - name: id
+          in: query
+          description: Use this parameter to filter learner training campaigns by id.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The unique identifier of a learner training campaign.
+              type: string
+              pattern: ^[a-zA-Z0-9]+$
+              example: ltc789def0
+          example:
+            - ltc789def0
+            - ltc789def1
+        - name: learnerId
+          in: query
+          description: Use this parameter to filter learner training campaigns by learner id.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The unique identifier of a learner.
+              type: string
+              pattern: ^[a-zA-Z0-9]+$
+              example: abc123def4
+          example:
+            - abc123def4
+            - xyz123abc4
+        - name: trainingCampaignId
+          in: query
+          description: Use this parameter to filter learner training campaigns by training campaign id.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The unique identifier of a training campaign.
+              type: string
+              pattern: ^[a-zA-Z0-9]+$
+              example: tc456xyz78
+          example:
+            - tc123abc4
+            - tc123abc5
+        - name: learnerStatus
+          in: query
+          description: Use this parameter to filter learner training campaigns by the status of the learner. When omitted, learner training campaigns for learners of all statuses will be included in the response.
+          schema:
+            type: array
+            items:
+              description: Status of the learner account. Active learners can access training. Deactivated and terminated learners cannot access training.
+              type: string
+              enum: *ref_0
+              example: ACTIVE
+          example:
+            - ACTIVE
+        - name: enrollmentStatus
+          in: query
+          description: Use this parameter to filter learner training campaigns by enrollment status.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The status of the learner's enrollment in the training campaign.  `UPCOMING` occurs when the learner has no assigned or completed training yet,  either because they were enrolled during a deferral period or all training was manually removed.
+              type: string
+              enum: &ref_14
+                - UPCOMING
+                - ACTIVE
+              example: ACTIVE
+          example:
+            - ACTIVE
+        - name: completionStatus
+          in: query
+          description: Use this parameter to filter learner training campaigns by completion status.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The completion status of the learner training campaign.  If the enrollment status is `UPCOMING`, there will not be a completion status.
+              type: string
+              enum: &ref_15
+                - COMPLETED
+                - WITHIN_DEADLINE
+                - INCOMPLETE
+              example: WITHIN_DEADLINE
+          example:
+            - WITHIN_DEADLINE
+            - INCOMPLETE
+        - name: limit
+          in: query
+          description: Use this parameter to limit the number of entities returned.
+          schema: *ref_11
+        - example: ltc789def25
+          name: cursor
+          in: query
+          description: |-
+            Use this parameter to paginate through entities. The cursor is the `id` of the last entity you want to start from.
+
+            To get the first page, omit this parameter. 
+
+            To get the next page, use the `id` of the last entity from the previous response. Continue paginating while `hasMore` is `true` in the response.
+
+            Example workflow:
+            1. GET /v1/{endpoint} → returns data + hasMore: true, last entity id: "xyz789end"
+            2. GET /v1/{endpoint}?cursor=xyz789end → returns next page
+          schema: *ref_12
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties: *ref_13
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          required: &ref_16
+                            - id
+                            - trainingCampaignId
+                            - learnerId
+                            - enrollmentStatus
+                          properties: &ref_17
+                            id:
+                              allOf:
+                                - description: The unique identifier of a learner training campaign.
+                                  type: string
+                                  pattern: ^[a-zA-Z0-9]+$
+                                  example: ltc789def0
+                            trainingCampaignId:
+                              allOf:
+                                - description: The unique identifier of a training campaign.
+                                  type: string
+                                  pattern: ^[a-zA-Z0-9]+$
+                                  example: tc456xyz78
+                            learnerId:
+                              allOf:
+                                - description: The unique identifier of a learner.
+                                  type: string
+                                  pattern: ^[a-zA-Z0-9]+$
+                                  example: abc123def4
+                            enrollmentStatus:
+                              allOf:
+                                - description: The status of the learner's enrollment in the training campaign.  `UPCOMING` occurs when the learner has no assigned or completed training yet,  either because they were enrolled during a deferral period or all training was manually removed.
+                                  type: string
+                                  enum: *ref_14
+                                  example: ACTIVE
+                            completionStatus:
+                              allOf:
+                                - description: The completion status of the learner training campaign.  If the enrollment status is `UPCOMING`, there will not be a completion status.
+                                  type: string
+                                  enum: *ref_15
+                                  example: WITHIN_DEADLINE
+                            nextTrainingAt:
+                              allOf:
+                                - description: The date and time when the next training session is scheduled to start.
+                                  type: string
+                                  format: date-time
+                                  example: '2026-09-01T00:00:00Z'
+                            deadline:
+                              allOf:
+                                - description: The deadline for the learner to complete the training campaign. In the case of multiple assignments, this is the oldest incomplete assignment deadline.
+                                  type: string
+                                  format: date-time
+                                  example: '2025-12-10T00:00:00Z'
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+  /v1/learner-training-campaigns/{id}:
+    get:
+      tags:
+        - Learner Training Campaigns
+      summary: Get a learner training campaign by id
+      description: Get a learner training campaign.
+      operationId: getLearnerTrainingCampaignById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: The unique identifier of a learner training campaign.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: ltc789def0
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    required: *ref_16
+                    properties: *ref_17
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '404':
+          description: Not Found
+          content: *ref_10
+  /v1/learner-training-modules:
+    get:
+      tags:
+        - Learner Training Modules
+      summary: Get learner training modules
+      description: |-
+        Get many learner training modules. 
+
+        The query parameter filters are applied as `AND` conditions across different filters. 
+        If multiple filters are used, the response will include only the learner training modules that satisfy all the filters.
+
+        Within a single filter, multiple values are applied as `OR` conditions.
+      operationId: getLearnerTrainingModules
+      parameters:
+        - name: id
+          in: query
+          description: Use this parameter to filter learner training modules by id.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The unique identifier of a learner training module.
+              type: string
+              pattern: ^[a-zA-Z0-9]+$
+              example: ltm456ghi9
+          example:
+            - ltm456ghi9
+            - ltm456ghi10
+        - name: learnerId
+          in: query
+          description: Use this parameter to filter learner training modules by learner id.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The unique identifier of a learner.
+              type: string
+              pattern: ^[a-zA-Z0-9]+$
+              example: abc123def4
+          example:
+            - abc123def4
+            - xyz123abc4
+        - name: learnerStatus
+          in: query
+          description: Use this parameter to filter learner training modules by the status of the learner. When omitted, learner training modules for learners of all statuses will be included in the response.
+          schema:
+            type: array
+            items:
+              description: Status of the learner account. Active learners can access training. Deactivated and terminated learners cannot access training.
+              type: string
+              enum: *ref_0
+              example: ACTIVE
+          example:
+            - ACTIVE
+        - name: trainingCampaignId
+          in: query
+          description: Use this parameter to filter learner training modules by training campaign id.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The unique identifier of a training campaign.
+              type: string
+              pattern: ^[a-zA-Z0-9]+$
+              example: tc456xyz78
+          example:
+            - tc123abc4
+            - tc123abc5
+        - name: trainingCampaignStatus
+          in: query
+          description: Use this parameter to filter learner training modules by the status of the training campaign. When omitted, learner training modules for training campaigns of all statuses will be included in the response.
+          schema:
+            type: array
+            items:
+              description: The status of the training campaign. `ACTIVE` campaigns may be scheduling training now and/or in the future. `ARCHIVED` campaigns have been deactivated and will no longer schedule new training.
+              type: string
+              enum: &ref_20
+                - ACTIVE
+                - ARCHIVED
+              example: ACTIVE
+          example:
+            - ACTIVE
+        - name: limit
+          in: query
+          description: Use this parameter to limit the number of entities returned.
+          schema: *ref_11
+        - example: ltm456ghi25
+          name: cursor
+          in: query
+          description: |-
+            Use this parameter to paginate through entities. The cursor is the `id` of the last entity you want to start from.
+
+            To get the first page, omit this parameter. 
+
+            To get the next page, use the `id` of the last entity from the previous response. Continue paginating while `hasMore` is `true` in the response.
+
+            Example workflow:
+            1. GET /v1/{endpoint} → returns data + hasMore: true, last entity id: "xyz789end"
+            2. GET /v1/{endpoint}?cursor=xyz789end → returns next page
+          schema: *ref_12
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties: *ref_13
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          required: &ref_18
+                            - id
+                            - trainingCampaignId
+                            - learnerId
+                            - moduleName
+                            - lengthInMinutes
+                            - assignedAt
+                            - status
+                            - statusUpdatedAt
+                          properties: &ref_19
+                            id:
+                              allOf:
+                                - description: The unique identifier of a learner training module.
+                                  type: string
+                                  pattern: ^[a-zA-Z0-9]+$
+                                  example: ltm456ghi9
+                            trainingCampaignId:
+                              allOf:
+                                - description: The unique identifier of a training campaign.
+                                  type: string
+                                  pattern: ^[a-zA-Z0-9]+$
+                                  example: tc456xyz78
+                            learnerId:
+                              allOf:
+                                - description: The unique identifier of a learner.
+                                  type: string
+                                  pattern: ^[a-zA-Z0-9]+$
+                                  example: abc123def4
+                            moduleName:
+                              allOf:
+                                - description: The name of the training module.
+                                  type: string
+                                  example: Foundations
+                            lengthInMinutes:
+                              allOf:
+                                - description: The training length of the module in minutes.
+                                  type: number
+                                  example: 45
+                            assignedAt:
+                              allOf:
+                                - description: The date and time the learner was assigned the training module.
+                                  type: string
+                                  format: date-time
+                                  example: '2025-05-01T00:00:00Z'
+                            status:
+                              allOf:
+                                - description: |-
+                                    The status of the learner training module.
+
+                                    Active statuses (learner can still interact and complete training):
+                                    - WITHIN_DEADLINE: Assigned but not yet completed, still within the deadline
+                                    - INCOMPLETE: Assigned but not completed, the deadline has passed
+
+                                    Completed statuses:
+                                    - USER_COMPLETED: Learner completed the module themselves
+                                    - ADMIN_COMPLETED: Administrator marked the module as completed
+                                    - CLASSROOM_COMPLETED: Completed in a classroom facilitated training
+                                    - ASSESSMENT_SKIPPED: Learner passed an assessment, and skipped this module
+
+                                    Removed statuses:
+                                    - ADMIN_REMOVED: Administrator removed the module
+                                    - ADMIN_ARCHIVED: Archived by administrator when training campaign was cancelled or archived
+                                    - SYSTEM_REMOVED: System automatically removed the module due to a change in population, learner status, or learner profile
+                                    - YEARLY_TRAINING_REMOVED: Incomplete module that was removed when new yearly training was assigned
+                                    - COURSE_UNENROLLED: Company unenrolled from the course
+                                    - MIGRATION_COMPANY_UNENROLLED: Status changed during data migration
+                                    - MIGRATED: Status changed during data migration
+                                  type: string
+                                  enum:
+                                    - YEARLY_TRAINING_REMOVED
+                                    - COURSE_UNENROLLED
+                                    - MIGRATION_COMPANY_UNENROLLED
+                                    - ADMIN_ARCHIVED
+                                    - WITHIN_DEADLINE
+                                    - INCOMPLETE
+                                    - USER_COMPLETED
+                                    - ADMIN_COMPLETED
+                                    - CLASSROOM_COMPLETED
+                                    - ASSESSMENT_SKIPPED
+                                    - SYSTEM_REMOVED
+                                    - ADMIN_REMOVED
+                                    - MIGRATED
+                                  example: WITHIN_DEADLINE
+                            statusUpdatedAt:
+                              allOf:
+                                - description: The instant of the latest status change of the training module.
+                                  type: string
+                                  format: date-time
+                                  example: '2025-06-10T21:39:59Z'
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+  /v1/learner-training-modules/{id}:
+    get:
+      tags:
+        - Learner Training Modules
+      summary: Get a learner training module by id
+      description: Get a training module.
+      operationId: getLearnerTrainingModuleById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: The unique identifier of a learner training module.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: ltm456ghi9
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    required: *ref_18
+                    properties: *ref_19
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '404':
+          description: Not Found
+          content: *ref_10
+  /v1/training-campaigns:
+    get:
+      tags:
+        - Training Campaigns
+      summary: Get training campaigns
+      description: |-
+        Get many training campaigns. 
+
+        The query parameter filters are applied as `AND` conditions across different filters. 
+        If multiple filters are used, the response will include only the training campaigns that satisfy all the filters.
+
+        Within a single filter, multiple values are applied as `OR` conditions.
+      operationId: getTrainingCampaigns
+      parameters:
+        - name: id
+          in: query
+          description: Use this parameter to filter training campaigns by id.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The unique identifier of a training campaign.
+              type: string
+              pattern: ^[a-zA-Z0-9]+$
+              example: tc456xyz78
+          example:
+            - tc123abc4
+            - tc123abc5
+        - name: status
+          in: query
+          description: Filter training campaigns by status. When omitted, training campaigns of all statuses will be included in the response.
+          schema:
+            type: array
+            maxItems: 25
+            items:
+              description: The status of the training campaign. `ACTIVE` campaigns may be scheduling training now and/or in the future. `ARCHIVED` campaigns have been deactivated and will no longer schedule new training.
+              type: string
+              enum: *ref_20
+              example: ACTIVE
+          example:
+            - ACTIVE
+        - name: limit
+          in: query
+          description: Use this parameter to limit the number of entities returned.
+          schema: *ref_11
+        - example: tc123abc25
+          name: cursor
+          in: query
+          description: |-
+            Use this parameter to paginate through entities. The cursor is the `id` of the last entity you want to start from.
+
+            To get the first page, omit this parameter. 
+
+            To get the next page, use the `id` of the last entity from the previous response. Continue paginating while `hasMore` is `true` in the response.
+
+            Example workflow:
+            1. GET /v1/{endpoint} → returns data + hasMore: true, last entity id: "xyz789end"
+            2. GET /v1/{endpoint}?cursor=xyz789end → returns next page
+          schema: *ref_12
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties: *ref_13
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          required: &ref_21
+                            - id
+                            - courseName
+                            - campaignName
+                            - status
+                            - initialTrainingAt
+                          properties: &ref_22
+                            id:
+                              allOf:
+                                - description: The unique identifier of a training campaign.
+                                  type: string
+                                  pattern: ^[a-zA-Z0-9]+$
+                                  example: tc456xyz78
+                            courseName:
+                              allOf:
+                                - description: The name of the course.
+                                  type: string
+                                  minLength: 2
+                                  maxLength: 255
+                                  example: Cybersecurity Awareness
+                            campaignName:
+                              allOf:
+                                - description: The name of the training campaign.
+                                  type: string
+                                  minLength: 2
+                                  maxLength: 255
+                                  example: Security Training 2025
+                            status:
+                              allOf:
+                                - description: The status of the training campaign. `ACTIVE` campaigns may be scheduling training now and/or in the future. `ARCHIVED` campaigns have been deactivated and will no longer schedule new training.
+                                  type: string
+                                  enum: *ref_20
+                                  example: ACTIVE
+                            initialTrainingAt:
+                              allOf:
+                                - description: The date and time when the training campaign is scheduled to start.
+                                  type: string
+                                  format: date-time
+                                  example: '2025-02-15T00:00:00Z'
+                            nextTrainingAt:
+                              allOf:
+                                - description: The date and time when the next training session is scheduled to start.
+                                  type: string
+                                  format: date-time
+                                  example: '2026-02-15T00:00:00Z'
+                            deadlineInDays:
+                              allOf:
+                                - description: The number of days before the deadline of the training campaign.  The deadline can be calculated as `initialTrainingAt`, plus the number of days specified in this field.  If the deadline in days is null, then the training campaign does not have a deadline.
+                                  type: integer
+                                  minimum: 0
+                                  example: 60
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+  /v1/training-campaigns/{id}:
+    get:
+      tags:
+        - Training Campaigns
+      summary: Get a training campaign by id
+      description: Get a training campaign.
+      operationId: getTrainingCampaignById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: The unique identifier of a training campaign.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: tc456xyz78
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    required: *ref_21
+                    properties: *ref_22
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '404':
+          description: Not Found
+          content: *ref_10
+  /v1/webhooks:
+    get:
+      tags:
+        - Webhooks
+      summary: Get webhooks
+      description: Get all webhooks.
+      operationId: getWebhooks
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          required: &ref_25
+                            - id
+                            - type
+                            - url
+                            - secretKey
+                          properties: &ref_26
+                            id:
+                              allOf:
+                                - description: The unique identifier of a webhook.
+                                  type: string
+                                  pattern: ^[a-zA-Z0-9]+$
+                                  example: wh123abc45
+                            type:
+                              allOf:
+                                - description: The type of webhook. Currently, only one type, `LEARNER_TRAINING_CAMPAIGN_COMPLETED`, is supported.
+                                  type: string
+                                  enum: &ref_23
+                                    - LEARNER_TRAINING_CAMPAIGN_COMPLETED
+                                  example: LEARNER_TRAINING_CAMPAIGN_COMPLETED
+                            url:
+                              allOf:
+                                - description: The url of the callback that will be triggered when the webhook is fired.
+                                  type: string
+                                  format: uri
+                                  maxLength: 2048
+                                  example: https://{your-domain}.com/webhooks/ethena
+                            secretKey:
+                              allOf:
+                                - description: The generated secret key that is used to sign requests to the webhook url.
+                                  type: string
+                                  pattern: ^[a-f0-9]+$
+                                  example: a1b2c3d4e5f6789012345678901234567890123456789012345678901234abcd
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '403':
+          description: Forbidden
+          content: &ref_24
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                minProperties: 1
+                description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+                required: *ref_1
+                properties: *ref_2
+    post:
+      tags:
+        - Webhooks
+      summary: Create a new webhook
+      description: Create a new webhook.
+      operationId: createWebhook
+      security:
+        - basic_auth: []
+      requestBody:
+        description: Webhook to be created.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - url
+                - type
+              properties:
+                url:
+                  allOf:
+                    - description: The url of the callback that will be triggered when the webhook is fired.
+                      type: string
+                      format: uri
+                      maxLength: 2048
+                      example: https://{your-domain}.com/webhooks/ethena
+                type:
+                  allOf:
+                    - description: The type of webhook. Currently, only one type, `LEARNER_TRAINING_CAMPAIGN_COMPLETED`, is supported.
+                      type: string
+                      enum: *ref_23
+                      example: LEARNER_TRAINING_CAMPAIGN_COMPLETED
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                description: The unique identifier of a webhook.
+                type: string
+                pattern: ^[a-zA-Z0-9]+$
+                example: wh123abc45
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '403':
+          description: Forbidden
+          content: *ref_24
+  /v1/webhooks/{id}:
+    get:
+      tags:
+        - Webhooks
+      summary: Get a webhook by id
+      description: Get a webhook.
+      operationId: getWebhookById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: The unique identifier of a webhook.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: wh123abc45
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    required: *ref_25
+                    properties: *ref_26
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '403':
+          description: Forbidden
+          content: *ref_24
+        '404':
+          description: Not Found
+          content: *ref_10
+    patch:
+      tags:
+        - Webhooks
+      summary: Update webhook by id
+      description: Update a webhook.
+      operationId: patchWebhookById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: The unique identifier of a webhook.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: wh123abc45
+      security:
+        - basic_auth: []
+      requestBody:
+        description: Webhook properties to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  allOf:
+                    - description: The url of the callback that will be triggered when the webhook is fired.
+                      type: string
+                      format: uri
+                      maxLength: 2048
+                      example: https://{your-domain}.com/webhooks/ethena
+                type:
+                  allOf:
+                    - description: The type of webhook. Currently, only one type, `LEARNER_TRAINING_CAMPAIGN_COMPLETED`, is supported.
+                      type: string
+                      enum: *ref_23
+                      example: LEARNER_TRAINING_CAMPAIGN_COMPLETED
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '403':
+          description: Forbidden
+          content: *ref_24
+        '404':
+          description: Not Found
+          content: *ref_10
+    delete:
+      tags:
+        - Webhooks
+      summary: Delete a webhook by id
+      description: Delete a webhook. This is a **hard delete**. The deleted webhook will no longer be accessible via the API. This operation is irreversible. If a webhook is deleted by mistake, a new webhook will need to be created.
+      operationId: deleteWebhookById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: The unique identifier of a webhook.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: wh123abc45
+      security:
+        - basic_auth: []
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '403':
+          description: Forbidden
+          content: *ref_24
+        '404':
+          description: Not Found
+          content: *ref_10
+  /v1/webhooks/{id}/trigger:
+    post:
+      tags:
+        - Webhooks
+      summary: Trigger a webhook by id
+      description: Trigger a webhook manually, without needing to perform the action that would normally trigger the webhook.
+      operationId: triggerWebhookById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            description: The unique identifier of a webhook.
+            type: string
+            pattern: ^[a-zA-Z0-9]+$
+            example: wh123abc45
+      security:
+        - basic_auth: []
+      requestBody:
+        description: Payload to be sent when making the webhook request.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                learnerId:
+                  allOf:
+                    - description: |-
+                        The unique identifier of a learner. 
+
+                        Required when the webhook type is `LEARNER_TRAINING_CAMPAIGN_COMPLETED`.
+                      type: string
+                      pattern: ^[a-zA-Z0-9]+$
+                      example: abc123def4
+                trainingCampaignId:
+                  allOf:
+                    - description: |-
+                        The unique identifier of a training campaign. 
+
+                        Required when the webhook type is `LEARNER_TRAINING_CAMPAIGN_COMPLETED`.
+                      type: string
+                      pattern: ^[a-zA-Z0-9]+$
+                      example: tc456xyz78
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content: *ref_6
+        '401':
+          description: Unauthorized
+          content: *ref_7
+        '403':
+          description: Forbidden
+          content: *ref_24
+        '404':
+          description: Not Found
+          content: *ref_10
+webhooks:
+  learnerTrainingCampaignCompleted:
+    post:
+      summary: Learner Training Campaign Completed Webhook
+      description: |-
+        This webhook is triggered when a learner completes a training campaign. This corresponds to the `LEARNER_TRAINING_CAMPAIGN_COMPLETED` webhook type.
+
+        This can be triggered by actions a learner takes in the Ethena platform, but may also be triggered by actions taken by an Ethena administrator.
+
+        - Most often, this webhook will be triggered when a learner completes all the training modules in a training campaign.
+        - If an administrator manually marks a learner as having completed a training campaign, the webhook will be triggered.
+        - If an administrator removes a training module from a learner's training campaign, and the rest of the training is completed, the webhook will be triggered.
+        - If a training campaign is archived in Ethena, the webhook will not be triggered.
+      operationId: learnerTrainingCampaignCompletedWebhook
+      tags:
+        - Webhooks
+      parameters:
+        - name: X-Signature
+          in: header
+          description: A signature of the payload, generated using the secret key provided when the webhook was created.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  required:
+                    - learnerId
+                    - trainingCampaignId
+                    - statusTimestamp
+                  properties:
+                    learnerId:
+                      allOf:
+                        - description: The unique identifier of a learner.
+                          type: string
+                          pattern: ^[a-zA-Z0-9]+$
+                          example: abc123def4
+                    trainingCampaignId:
+                      allOf:
+                        - description: The unique identifier of a training campaign.
+                          type: string
+                          pattern: ^[a-zA-Z0-9]+$
+                          example: tc456xyz78
+                    statusTimestamp:
+                      description: The date and time at which the learner completed the training campaign.
+                      type: string
+                      format: date-time
+                      example: '2025-08-20T17:32:53Z'
+      security:
+        - basic_auth: []
+components:
+  securitySchemes:
+    basic_auth:
+      description: Send requests with the Authorization header that contains the word `Basic` followed by a space and a base64-encoded string of the username and api key, `username:apiKey`.
+      type: http
+      scheme: basic
+x-tagGroups:
+  - name: General
+    tags:
+      - Learners
+      - Training Campaigns
+      - Learner Training Campaigns
+      - Learner Training Modules
+      - Webhooks

@@ -1,0 +1,22 @@
+{
+  "provider": "ethena",
+  "sources": [
+    "ethena-learner-training-campaigns-api-openapi.yml",
+    "ethena-learner-training-modules-api-openapi.yml",
+    "ethena-learners-api-openapi.yml",
+    "ethena-training-campaigns-api-openapi.yml",
+    "ethena-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "ethena-learner-training-campaigns-api-openapi.yml",
+    "ethena-learner-training-modules-api-openapi.yml",
+    "ethena-learners-api-openapi.yml",
+    "ethena-training-campaigns-api-openapi.yml",
+    "ethena-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

@@ -1,0 +1,12 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/ethena-openapi-original.yml
+skills:
+  - file: ethena-sync-learners.md
+    name: Sync and manage Ethena learners
+    api: openapi/ethena-openapi-original.yml
+    operations: [getLearners, createLearner, getLearnerById, patchLearnerById, deleteLearnerById]
+  - file: ethena-track-training-completion.md
+    name: Track Ethena training completion
+    api: openapi/ethena-openapi-original.yml
+    operations: [getTrainingCampaigns, getTrainingCampaignById, getLearnerTrainingCampaigns, getLearnerTrainingCampaignById, getLearnerTrainingModules, createWebhook, getWebhookById]

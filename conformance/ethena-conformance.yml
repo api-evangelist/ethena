@@ -1,0 +1,38 @@
+generated: '2026-07-19'
+method: searched
+source:
+  - openapi/ethena-openapi-original.yml
+  - https://www.goethena.com/post/ethena-completes-soc-2-type-2-examination/
+standards:
+  - id: rfc7807-problem-details
+    conforms: true
+    evidence: All error responses use the RFC 7807 Problem Details JSON object.
+  - id: openapi-3.1
+    conforms: true
+    evidence: Definition declares openapi 3.1.0.
+  - id: http-basic-auth
+    conforms: true
+    evidence: securityScheme basic_auth (type http, scheme basic).
+  - id: cursor-pagination
+    conforms: true
+    evidence: List endpoints use limit/cursor request params and limit/hasMore/data response.
+  - id: hmac-webhook-signatures
+    conforms: true
+    evidence: Webhook deliveries signed with HMAC SHA-256 in the X-Signature header.
+  - id: oauth2
+    conforms: false
+    evidence: No oauth2 securityScheme in the API definition (API uses HTTP Basic).
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: Errors cite RFC 7807 and use application/json (not application/problem+json).
+compliance:
+  soc2_type2:
+    published: true
+    scope: Security and Availability trust service categories
+    auditor: Dansa D'Arata Soucia LLP
+    cadence: annual
+    source: https://www.goethena.com/post/ethena-completes-soc-2-type-2-examination/
+    report_availability: Available upon request under confidentiality.
+  security_measures:
+    - MFA enforced on critical systems and company accounts
+    - AES-256 encryption at rest and in transit

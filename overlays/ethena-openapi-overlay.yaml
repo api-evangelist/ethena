@@ -1,0 +1,28 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Ethena API
+  version: 1.0.0
+extends: openapi/ethena-openapi-original.yml
+x-apievangelist-generated: '2026-07-19'
+x-apievangelist-method: generated
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-rating: enriched
+      x-apievangelist-auth: http-basic (username:apiKey)
+      x-apievangelist-pagination: cursor (limit, cursor -> limit, hasMore, data)
+      x-apievangelist-error-format: rfc7807
+      x-apievangelist-webhooks: HMAC SHA-256 (X-Signature)
+      x-apievangelist-status-page: https://status.goethena.com
+      x-apievangelist-compliance: SOC 2 Type II
+  - target: $.info
+    update:
+      x-apievangelist-artifacts:
+        conventions: conventions/ethena-conventions.yml
+        errors: errors/ethena-problem-types.yml
+        lifecycle: lifecycle/ethena-lifecycle.yml
+        changelog: changelog/ethena-changelog.yml
+        conformance: conformance/ethena-conformance.yml
+        data_model: data-model/ethena-data-model.yml
+        webhooks: asyncapi/ethena-webhooks.yml
+        authentication: authentication/ethena-authentication.yml
