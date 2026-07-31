@@ -64,3 +64,13 @@ components:
             type: string
             format: date-time
             description: The date and time at which the learner completed the training campaign.
+
+# --- API Evangelist provenance -------------------------------------------
+x-superseded-by:
+  reason: >-
+    Provider publishes this event surface themselves in as-published OpenAPI; this document was authored by API Evangelist before that source was harvested.
+  published_spec: all/ethena/openapi/_original/ethena-openapi-original.yml
+  published_event_object: webhooks
+  published_events: 1
+  status: superseded
+  reviewed: '2026-07-31'
