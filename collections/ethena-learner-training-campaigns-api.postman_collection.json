@@ -1,0 +1,713 @@
+{
+  "item": [
+    {
+      "id": "4f8c3c5c-45ee-456d-b1a8-ea3f48dd7c6f",
+      "name": "Learner Training Campaigns",
+      "description": {
+        "content": "Learner training campaign information and operations.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "01a8af19-47ba-4f06-8c01-5877f3f4c407",
+          "name": "Get learner training campaigns",
+          "request": {
+            "name": "Get learner training campaigns",
+            "description": {
+              "content": "Get many learner training campaigns. Only learner training campaigns for `ACTIVE` training campaigns are included in the response.\n\nThe query parameter filters are applied as `AND` conditions across different filters. \nIf multiple filters are used, the response will include only the learner training campaigns that satisfy all the filters.\n\nWithin a single filter, multiple values are applied as `OR` conditions.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "learner-training-campaigns"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "id",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by id."
+                },
+                {
+                  "disabled": false,
+                  "key": "id",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by id."
+                },
+                {
+                  "disabled": false,
+                  "key": "learnerId",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by learner id."
+                },
+                {
+                  "disabled": false,
+                  "key": "learnerId",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by learner id."
+                },
+                {
+                  "disabled": false,
+                  "key": "trainingCampaignId",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by training campaign id."
+                },
+                {
+                  "disabled": false,
+                  "key": "trainingCampaignId",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by training campaign id."
+                },
+                {
+                  "disabled": false,
+                  "key": "learnerStatus",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by the status of the learner. When omitted, learner training campaigns for learners of all statuses will be included in the response."
+                },
+                {
+                  "disabled": false,
+                  "key": "learnerStatus",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by the status of the learner. When omitted, learner training campaigns for learners of all statuses will be included in the response."
+                },
+                {
+                  "disabled": false,
+                  "key": "enrollmentStatus",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by enrollment status."
+                },
+                {
+                  "disabled": false,
+                  "key": "enrollmentStatus",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by enrollment status."
+                },
+                {
+                  "disabled": false,
+                  "key": "completionStatus",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by completion status."
+                },
+                {
+                  "disabled": false,
+                  "key": "completionStatus",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learner training campaigns by completion status."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "25",
+                  "description": "Use this parameter to limit the number of entities returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Use this parameter to paginate through entities. The cursor is the `id` of the last entity you want to start from.\n\nTo get the first page, omit this parameter. \n\nTo get the next page, use the `id` of the last entity from the previous response. Continue paginating while `hasMore` is `true` in the response.\n\nExample workflow:\n1. GET /v1/{endpoint} → returns data + hasMore: true, last entity id: \"xyz789end\"\n2. GET /v1/{endpoint}?cursor=xyz789end → returns next page"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "bdd850e9-80c7-4c2b-b1d4-14f567648f91",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learner-training-campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "ltc789def0"
+                    },
+                    {
+                      "key": "id",
+                      "value": "ltc789def1"
+                    },
+                    {
+                      "key": "learnerId",
+                      "value": "abc123def4"
+                    },
+                    {
+                      "key": "learnerId",
+                      "value": "xyz123abc4"
+                    },
+                    {
+                      "key": "trainingCampaignId",
+                      "value": "tc123abc4"
+                    },
+                    {
+                      "key": "trainingCampaignId",
+                      "value": "tc123abc5"
+                    },
+                    {
+                      "key": "learnerStatus",
+                      "value": "ACTIVE"
+                    },
+                    {
+                      "key": "enrollmentStatus",
+                      "value": "ACTIVE"
+                    },
+                    {
+                      "key": "completionStatus",
+                      "value": "WITHIN_DEADLINE"
+                    },
+                    {
+                      "key": "completionStatus",
+                      "value": "INCOMPLETE"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "ltc789def25"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"limit\": 4287,\n  \"hasMore\": true,\n  \"data\": [\n    {\n      \"id\": \"ltc789def0\",\n      \"trainingCampaignId\": \"tc456xyz78\",\n      \"learnerId\": \"abc123def4\",\n      \"enrollmentStatus\": \"ACTIVE\",\n      \"completionStatus\": \"WITHIN_DEADLINE\",\n      \"nextTrainingAt\": \"2026-09-01T00:00:00Z\",\n      \"deadline\": \"2025-12-10T00:00:00Z\"\n    },\n    {\n      \"id\": \"ltc789def0\",\n      \"trainingCampaignId\": \"tc456xyz78\",\n      \"learnerId\": \"abc123def4\",\n      \"enrollmentStatus\": \"ACTIVE\",\n      \"completionStatus\": \"WITHIN_DEADLINE\",\n      \"nextTrainingAt\": \"2026-09-01T00:00:00Z\",\n      \"deadline\": \"2025-12-10T00:00:00Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c115054d-d03c-4e14-8542-4e90abe1ab39",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learner-training-campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "ltc789def0"
+                    },
+                    {
+                      "key": "id",
+                      "value": "ltc789def1"
+                    },
+                    {
+                      "key": "learnerId",
+                      "value": "abc123def4"
+                    },
+                    {
+                      "key": "learnerId",
+                      "value": "xyz123abc4"
+                    },
+                    {
+                      "key": "trainingCampaignId",
+                      "value": "tc123abc4"
+                    },
+                    {
+                      "key": "trainingCampaignId",
+                      "value": "tc123abc5"
+                    },
+                    {
+                      "key": "learnerStatus",
+                      "value": "ACTIVE"
+                    },
+                    {
+                      "key": "enrollmentStatus",
+                      "value": "ACTIVE"
+                    },
+                    {
+                      "key": "completionStatus",
+                      "value": "WITHIN_DEADLINE"
+                    },
+                    {
+                      "key": "completionStatus",
+                      "value": "INCOMPLETE"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "ltc789def25"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2a73a281-f88f-4473-bf8f-f718986ff30b",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learner-training-campaigns"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "ltc789def0"
+                    },
+                    {
+                      "key": "id",
+                      "value": "ltc789def1"
+                    },
+                    {
+                      "key": "learnerId",
+                      "value": "abc123def4"
+                    },
+                    {
+                      "key": "learnerId",
+                      "value": "xyz123abc4"
+                    },
+                    {
+                      "key": "trainingCampaignId",
+                      "value": "tc123abc4"
+                    },
+                    {
+                      "key": "trainingCampaignId",
+                      "value": "tc123abc5"
+                    },
+                    {
+                      "key": "learnerStatus",
+                      "value": "ACTIVE"
+                    },
+                    {
+                      "key": "enrollmentStatus",
+                      "value": "ACTIVE"
+                    },
+                    {
+                      "key": "completionStatus",
+                      "value": "WITHIN_DEADLINE"
+                    },
+                    {
+                      "key": "completionStatus",
+                      "value": "INCOMPLETE"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "ltc789def25"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a7062de1-322d-479f-a6e0-23343e0072c7",
+          "name": "Get a learner training campaign by id",
+          "request": {
+            "name": "Get a learner training campaign by id",
+            "description": {
+              "content": "Get a learner training campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "learner-training-campaigns",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b17674a8-7034-4d26-8bb1-05d7f0b46a3a",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learner-training-campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"ltc789def0\",\n  \"trainingCampaignId\": \"tc456xyz78\",\n  \"learnerId\": \"abc123def4\",\n  \"enrollmentStatus\": \"ACTIVE\",\n  \"completionStatus\": \"WITHIN_DEADLINE\",\n  \"nextTrainingAt\": \"2026-09-01T00:00:00Z\",\n  \"deadline\": \"2025-12-10T00:00:00Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "694b94f7-b466-49aa-9a00-592fb95c91c7",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learner-training-campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e0ab68a4-a8ac-463c-9cc4-9812c5701f4a",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learner-training-campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "71538b44-a316-4a93-b523-039bcf1b5071",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learner-training-campaigns",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.goethena.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "7f587756-d328-4254-a98a-33a8bd9d15b1",
+    "name": "Ethena Learner Training Campaigns API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Ethena API allows you to view and manage learners and training information.\n\n# Accessing the API\nIn order to get access to our API please work with your sales representative to get an\nAPI key provisioned and shared with you.\n\nWebhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.\n\n# Changelog\n- **v1.0.0** - Initial release of the API, including learners, training campaigns, learner training campaigns, and learner training modules.\n- **v1.1.0** - Added webhooks operations and support for learner training campaign completed webhook.\n- **v1.2.0** - Remove separate language region property on learner and support Unicode Common Locale Data Repository language formats.\n- **v1.3.0** - Added filter parameters for learners (email, name), learner training modules (learnerStatus, trainingCampaignStatus), and learner training campaigns (learnerStatus, trainingCampaignStatus). Added training campaign status field to training campaigns.\n\nContact Support:\n Name: Contact support\n Email: support@goethena.com",
+      "type": "text/plain"
+    }
+  }
+}

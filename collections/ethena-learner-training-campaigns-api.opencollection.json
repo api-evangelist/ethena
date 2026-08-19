@@ -1,0 +1,107 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ethena Learner Training Campaigns API",
+    "version": "1.3.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Learner Training Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get learner training campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.goethena.com/v1/learner-training-campaigns",
+            "params": [
+              {
+                "name": "id",
+                "value": "ltc789def0,ltc789def1",
+                "type": "query",
+                "description": "Use this parameter to filter learner training campaigns by id."
+              },
+              {
+                "name": "learnerId",
+                "value": "abc123def4,xyz123abc4",
+                "type": "query",
+                "description": "Use this parameter to filter learner training campaigns by learner id."
+              },
+              {
+                "name": "trainingCampaignId",
+                "value": "tc123abc4,tc123abc5",
+                "type": "query",
+                "description": "Use this parameter to filter learner training campaigns by training campaign id."
+              },
+              {
+                "name": "learnerStatus",
+                "value": "ACTIVE",
+                "type": "query",
+                "description": "Use this parameter to filter learner training campaigns by the status of the learner. When omitted, learner training campaigns for learners of all statuses will be included in the response."
+              },
+              {
+                "name": "enrollmentStatus",
+                "value": "ACTIVE",
+                "type": "query",
+                "description": "Use this parameter to filter learner training campaigns by enrollment status."
+              },
+              {
+                "name": "completionStatus",
+                "value": "WITHIN_DEADLINE,INCOMPLETE",
+                "type": "query",
+                "description": "Use this parameter to filter learner training campaigns by completion status."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Use this parameter to limit the number of entities returned."
+              },
+              {
+                "name": "cursor",
+                "value": "ltc789def25",
+                "type": "query",
+                "description": "Use this parameter to paginate through entities. The cursor is the `id` of the last entity you want to start from.\n\nTo get the first page, omit this parameter. \n\nTo get the next page, use the `id` of the last entity from the previous response. Continue paginating while `hasMore` is `true` in the response.\n\nExample workflow:\n1. GET /v1/{endpoint} → returns data + hasMore: true, last entity id: \"xyz789end\"\n2. GET /v1/{endpoint}?cursor=xyz789end → returns next page"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get many learner training campaigns. Only learner training campaigns for `ACTIVE` training campaigns are included in the response.\n\nThe query parameter filters are applied as `AND` conditions across different filters. \nIf multiple filters are used, the response will include only the learner training campaigns that satisfy all the filters.\n\nWithin a single filter, multiple values are applied as `OR` conditions."
+        },
+        {
+          "info": {
+            "name": "Get a learner training campaign by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.goethena.com/v1/learner-training-campaigns/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get a learner training campaign."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

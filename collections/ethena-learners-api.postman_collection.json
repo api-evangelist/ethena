@@ -1,0 +1,1421 @@
+{
+  "item": [
+    {
+      "id": "8ae2bf80-16d1-47ab-91c5-adaf9b263adc",
+      "name": "Learners",
+      "description": {
+        "content": "Learner information and operations.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c735da7a-1b5c-49ce-92f6-f483687d4f1c",
+          "name": "Get learners",
+          "request": {
+            "name": "Get learners",
+            "description": {
+              "content": "Get many learners.\n\nThe query parameter filters are applied as `AND` conditions across different filters. \nIf multiple filters are used, the response will include only the learners that satisfy all the filters.\n\nWithin a single filter, multiple values are applied as `OR` conditions.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "learners"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "id",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learners by id."
+                },
+                {
+                  "disabled": false,
+                  "key": "id",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learners by id."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learners by status. By default, all statuses are returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learners by status. By default, all statuses are returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "email",
+                  "value": "<email>",
+                  "description": "Use this parameter to filter learners by exact email match within the tenant."
+                },
+                {
+                  "disabled": false,
+                  "key": "email",
+                  "value": "<email>",
+                  "description": "Use this parameter to filter learners by exact email match within the tenant."
+                },
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learners by exact name match."
+                },
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "Use this parameter to filter learners by exact name match."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "25",
+                  "description": "Use this parameter to limit the number of entities returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Use this parameter to paginate through entities. The cursor is the `id` of the last entity you want to start from.\n\nTo get the first page, omit this parameter. \n\nTo get the next page, use the `id` of the last entity from the previous response. Continue paginating while `hasMore` is `true` in the response.\n\nExample workflow:\n1. GET /v1/{endpoint} → returns data + hasMore: true, last entity id: \"xyz789end\"\n2. GET /v1/{endpoint}?cursor=xyz789end → returns next page"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "49acfdd0-2b53-463b-a244-a1ec926ede37",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "abc123def4"
+                    },
+                    {
+                      "key": "id",
+                      "value": "xyz123abc4"
+                    },
+                    {
+                      "key": "status",
+                      "value": "ACTIVE"
+                    },
+                    {
+                      "key": "email",
+                      "value": "first.last@your-domain.com"
+                    },
+                    {
+                      "key": "name",
+                      "value": "First Last"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "abc123def25"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"limit\": 5832,\n  \"hasMore\": false,\n  \"data\": [\n    {\n      \"id\": \"abc123def4\",\n      \"name\": \"First Last\",\n      \"email\": \"PM5Aa2MXZ@bTDtIEtFWKXgoWomGdBblcXDjzplymEQ.bvtm\",\n      \"status\": \"ACTIVE\",\n      \"country\": \"USA\",\n      \"isManager\": true,\n      \"language\": \"en\",\n      \"trainingUrl\": \"https://XFeNJZvrbHPfhXZEoNPr.qyu5Yzide.F32AtcJf\",\n      \"state\": \"NY\",\n      \"managerLearnerId\": \"xyz123abc4\",\n      \"department\": \"Engineering\",\n      \"workerType\": \"Full Time\",\n      \"customCategory\": \"Brooklyn\"\n    },\n    {\n      \"id\": \"abc123def4\",\n      \"name\": \"First Last\",\n      \"email\": \"SgqFa@TrDMJQFkoVOZ.iv\",\n      \"status\": \"ACTIVE\",\n      \"country\": \"USA\",\n      \"isManager\": true,\n      \"language\": \"en\",\n      \"trainingUrl\": \"http://lllkLFKxRx.xfykPMuj\",\n      \"state\": \"NY\",\n      \"managerLearnerId\": \"xyz123abc4\",\n      \"department\": \"Engineering\",\n      \"workerType\": \"Full Time\",\n      \"customCategory\": \"Brooklyn\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0c5dd63d-7512-4f50-9755-a93d3ddf9bdb",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "abc123def4"
+                    },
+                    {
+                      "key": "id",
+                      "value": "xyz123abc4"
+                    },
+                    {
+                      "key": "status",
+                      "value": "ACTIVE"
+                    },
+                    {
+                      "key": "email",
+                      "value": "first.last@your-domain.com"
+                    },
+                    {
+                      "key": "name",
+                      "value": "First Last"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "abc123def25"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "efaa69fa-e0c8-4e31-8224-88636ce7cea9",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "abc123def4"
+                    },
+                    {
+                      "key": "id",
+                      "value": "xyz123abc4"
+                    },
+                    {
+                      "key": "status",
+                      "value": "ACTIVE"
+                    },
+                    {
+                      "key": "email",
+                      "value": "first.last@your-domain.com"
+                    },
+                    {
+                      "key": "name",
+                      "value": "First Last"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "abc123def25"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fe1d1ee0-bbb8-4cd0-81a4-78eb2c1317a0",
+          "name": "Create a new learner",
+          "request": {
+            "name": "Create a new learner",
+            "description": {
+              "content": "Create a new learner.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "learners"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"email\": \"<email>\",\n  \"country\": \"<string>\",\n  \"isManager\": \"<boolean>\",\n  \"language\": \"<string>\",\n  \"state\": \"<string>\",\n  \"managerLearnerId\": \"<string>\",\n  \"department\": \"<string>\",\n  \"workerType\": \"<string>\",\n  \"customCategory\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "13c87b50-f7e1-44e6-ba4c-d00b3a19cf75",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"First Last\",\n  \"email\": \"<email>\",\n  \"country\": \"USA\",\n  \"isManager\": true,\n  \"language\": \"en\",\n  \"state\": \"NY\",\n  \"managerLearnerId\": \"xyz123abc4\",\n  \"department\": \"Engineering\",\n  \"workerType\": \"Full Time\",\n  \"customCategory\": \"Brooklyn\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"abc123def4\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9977e9e0-ac29-481a-b914-714ac0bac5a4",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"First Last\",\n  \"email\": \"<email>\",\n  \"country\": \"USA\",\n  \"isManager\": true,\n  \"language\": \"en\",\n  \"state\": \"NY\",\n  \"managerLearnerId\": \"xyz123abc4\",\n  \"department\": \"Engineering\",\n  \"workerType\": \"Full Time\",\n  \"customCategory\": \"Brooklyn\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "889ff6fe-7843-47ea-bb54-7def936780bf",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"First Last\",\n  \"email\": \"<email>\",\n  \"country\": \"USA\",\n  \"isManager\": true,\n  \"language\": \"en\",\n  \"state\": \"NY\",\n  \"managerLearnerId\": \"xyz123abc4\",\n  \"department\": \"Engineering\",\n  \"workerType\": \"Full Time\",\n  \"customCategory\": \"Brooklyn\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "26dbb7a7-079e-47bd-958b-49a47cb6ce29",
+          "name": "Get a learner by id",
+          "request": {
+            "name": "Get a learner by id",
+            "description": {
+              "content": "Get a learner.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "learners",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "352b235a-74ae-4e0b-bb5e-c19df40c14da",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"abc123def4\",\n  \"name\": \"First Last\",\n  \"email\": \"VMQWCM0HeVgoSH@TRKVmvJl.gwa\",\n  \"status\": \"ACTIVE\",\n  \"country\": \"USA\",\n  \"isManager\": true,\n  \"language\": \"en\",\n  \"trainingUrl\": \"http://VgLUCMmBipjBEfgRUGVgyfzax.aujjlEeBiIACco1VzmfcJV7XPO5xiUKlmPkk,dTAX34E25EhssS8dB\",\n  \"state\": \"NY\",\n  \"managerLearnerId\": \"xyz123abc4\",\n  \"department\": \"Engineering\",\n  \"workerType\": \"Full Time\",\n  \"customCategory\": \"Brooklyn\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "520635ef-b3c2-4cd0-a8cf-61952087f989",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f608cb8f-94d6-4d16-b488-9d1a1b4efd29",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e2c2aad2-9074-4771-9b90-0d9a94753a74",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "56a1009a-1cb0-4cbe-8dc5-3840ce505056",
+          "name": "Update learner by id",
+          "request": {
+            "name": "Update learner by id",
+            "description": {
+              "content": "Update a learner.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "learners",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"status\": \"<string>\",\n  \"email\": \"<email>\",\n  \"country\": \"<string>\",\n  \"state\": \"<string>\",\n  \"isManager\": \"<boolean>\",\n  \"managerLearnerId\": \"<string>\",\n  \"department\": \"<string>\",\n  \"workerType\": \"<string>\",\n  \"customCategory\": \"<string>\",\n  \"language\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0d760230-392a-453b-86a9-415ea39b00e1",
+              "name": "No Content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"abc123def4\",\n  \"name\": \"First Last\",\n  \"status\": \"ACTIVE\",\n  \"email\": \"<email>\",\n  \"country\": \"USA\",\n  \"state\": \"NY\",\n  \"isManager\": true,\n  \"managerLearnerId\": \"xyz123abc4\",\n  \"department\": \"Engineering\",\n  \"workerType\": \"Full Time\",\n  \"customCategory\": \"Brooklyn\",\n  \"language\": \"en\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "2ab163e5-c438-461e-80a8-21a174a1f5a6",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"abc123def4\",\n  \"name\": \"First Last\",\n  \"status\": \"ACTIVE\",\n  \"email\": \"<email>\",\n  \"country\": \"USA\",\n  \"state\": \"NY\",\n  \"isManager\": true,\n  \"managerLearnerId\": \"xyz123abc4\",\n  \"department\": \"Engineering\",\n  \"workerType\": \"Full Time\",\n  \"customCategory\": \"Brooklyn\",\n  \"language\": \"en\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5d5afa52-50a6-4362-b42c-4cfa63745e3a",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"abc123def4\",\n  \"name\": \"First Last\",\n  \"status\": \"ACTIVE\",\n  \"email\": \"<email>\",\n  \"country\": \"USA\",\n  \"state\": \"NY\",\n  \"isManager\": true,\n  \"managerLearnerId\": \"xyz123abc4\",\n  \"department\": \"Engineering\",\n  \"workerType\": \"Full Time\",\n  \"customCategory\": \"Brooklyn\",\n  \"language\": \"en\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "621b4d75-5d44-4576-bcbc-9663886ccc52",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"abc123def4\",\n  \"name\": \"First Last\",\n  \"status\": \"ACTIVE\",\n  \"email\": \"<email>\",\n  \"country\": \"USA\",\n  \"state\": \"NY\",\n  \"isManager\": true,\n  \"managerLearnerId\": \"xyz123abc4\",\n  \"department\": \"Engineering\",\n  \"workerType\": \"Full Time\",\n  \"customCategory\": \"Brooklyn\",\n  \"language\": \"en\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a4c411af-8155-4eb7-8a0d-d77cae574322",
+          "name": "Delete a learner by id",
+          "request": {
+            "name": "Delete a learner by id",
+            "description": {
+              "content": "Delete a learner. This is a **hard delete**. The deleted learner will no longer be accessible via the API. This operation is irreversible. If a learner is deleted by mistake, a new learner account will need to be created. If removing access to training is the goal, consider deactivating the learner account instead.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "learners",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "95d05b3b-d6d9-43f9-a591-b8a81fe1448f",
+              "name": "No Content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "bde3c41e-4843-4cfb-95d5-cbe18005fddf",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9a150268-c9b9-4d24-b4a8-e6b4c7cae892",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1f3ec5cc-7545-407b-9c9c-7c6fbf103463",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "learners",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": \"string\",\n  \"detail\": \"string\",\n  \"invalid-params\": [\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.goethena.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "ede94b15-65d5-4caf-846f-b944e487b984",
+    "name": "Ethena Learner Training Campaigns Learners API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Ethena API allows you to view and manage learners and training information.\n\n# Accessing the API\nIn order to get access to our API please work with your sales representative to get an\nAPI key provisioned and shared with you.\n\nWebhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.\n\n# Changelog\n- **v1.0.0** - Initial release of the API, including learners, training campaigns, learner training campaigns, and learner training modules.\n- **v1.1.0** - Added webhooks operations and support for learner training campaign completed webhook.\n- **v1.2.0** - Remove separate language region property on learner and support Unicode Common Locale Data Repository language formats.\n- **v1.3.0** - Added filter parameters for learners (email, name), learner training modules (learnerStatus, trainingCampaignStatus), and learner training campaigns (learnerStatus, trainingCampaignStatus). Added training campaign status field to training campaigns.\n\nContact Support:\n Name: Contact support\n Email: support@goethena.com",
+      "type": "text/plain"
+    }
+  }
+}

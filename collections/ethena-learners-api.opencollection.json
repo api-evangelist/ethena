@@ -1,0 +1,165 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ethena Learner Training Campaigns Learners API",
+    "version": "1.3.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Learners",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get learners",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.goethena.com/v1/learners",
+            "params": [
+              {
+                "name": "id",
+                "value": "abc123def4,xyz123abc4",
+                "type": "query",
+                "description": "Use this parameter to filter learners by id."
+              },
+              {
+                "name": "status",
+                "value": "ACTIVE",
+                "type": "query",
+                "description": "Use this parameter to filter learners by status. By default, all statuses are returned."
+              },
+              {
+                "name": "email",
+                "value": "first.last@your-domain.com",
+                "type": "query",
+                "description": "Use this parameter to filter learners by exact email match within the tenant."
+              },
+              {
+                "name": "name",
+                "value": "First Last",
+                "type": "query",
+                "description": "Use this parameter to filter learners by exact name match."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Use this parameter to limit the number of entities returned."
+              },
+              {
+                "name": "cursor",
+                "value": "abc123def25",
+                "type": "query",
+                "description": "Use this parameter to paginate through entities. The cursor is the `id` of the last entity you want to start from.\n\nTo get the first page, omit this parameter. \n\nTo get the next page, use the `id` of the last entity from the previous response. Continue paginating while `hasMore` is `true` in the response.\n\nExample workflow:\n1. GET /v1/{endpoint} → returns data + hasMore: true, last entity id: \"xyz789end\"\n2. GET /v1/{endpoint}?cursor=xyz789end → returns next page"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get many learners.\n\nThe query parameter filters are applied as `AND` conditions across different filters. \nIf multiple filters are used, the response will include only the learners that satisfy all the filters.\n\nWithin a single filter, multiple values are applied as `OR` conditions."
+        },
+        {
+          "info": {
+            "name": "Create a new learner",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.goethena.com/v1/learners",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Create a new learner."
+        },
+        {
+          "info": {
+            "name": "Get a learner by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.goethena.com/v1/learners/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get a learner."
+        },
+        {
+          "info": {
+            "name": "Update learner by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.goethena.com/v1/learners/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Update a learner."
+        },
+        {
+          "info": {
+            "name": "Delete a learner by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.goethena.com/v1/learners/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Delete a learner. This is a **hard delete**. The deleted learner will no longer be accessible via the API. This operation is irreversible. If a learner is deleted by mistake, a new learner account will need to be created. If removing access to training is the goal, consider deactivating the learner account instead."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

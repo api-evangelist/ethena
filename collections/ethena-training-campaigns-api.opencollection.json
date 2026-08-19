@@ -1,0 +1,83 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ethena Learner Training Campaigns API",
+    "version": "1.3.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Training Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get training campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.goethena.com/v1/training-campaigns",
+            "params": [
+              {
+                "name": "id",
+                "value": "tc123abc4,tc123abc5",
+                "type": "query",
+                "description": "Use this parameter to filter training campaigns by id."
+              },
+              {
+                "name": "status",
+                "value": "ACTIVE",
+                "type": "query",
+                "description": "Filter training campaigns by status. When omitted, training campaigns of all statuses will be included in the response."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Use this parameter to limit the number of entities returned."
+              },
+              {
+                "name": "cursor",
+                "value": "tc123abc25",
+                "type": "query",
+                "description": "Use this parameter to paginate through entities. The cursor is the `id` of the last entity you want to start from.\n\nTo get the first page, omit this parameter. \n\nTo get the next page, use the `id` of the last entity from the previous response. Continue paginating while `hasMore` is `true` in the response.\n\nExample workflow:\n1. GET /v1/{endpoint} → returns data + hasMore: true, last entity id: \"xyz789end\"\n2. GET /v1/{endpoint}?cursor=xyz789end → returns next page"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get many training campaigns. \n\nThe query parameter filters are applied as `AND` conditions across different filters. \nIf multiple filters are used, the response will include only the training campaigns that satisfy all the filters.\n\nWithin a single filter, multiple values are applied as `OR` conditions."
+        },
+        {
+          "info": {
+            "name": "Get a training campaign by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.goethena.com/v1/training-campaigns/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get a training campaign."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
