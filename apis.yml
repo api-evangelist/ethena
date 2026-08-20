@@ -40,6 +40,15 @@ tags:
 - Company
 - Compliance
 - Training
+- Governance Risk and Compliance
+- Human Resources
+- Learning Management
+- Workflows
+- Webhook
+tags_raw:
+- Company
+- Compliance
+- Training
 - Governance, Risk and Compliance
 - Human Resources
 - Learning Management
@@ -201,6 +210,8 @@ apis:
   humanURL: https://api.goethena.com/docs/
   baseURL: https://api.goethena.com
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
