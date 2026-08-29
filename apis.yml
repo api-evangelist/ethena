@@ -256,6 +256,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/ethena-capability-edges.yml
+  name: Ethena Business Capability Map
 - type: DeveloperPortal
   url: https://api.goethena.com/docs/
 - type: Documentation

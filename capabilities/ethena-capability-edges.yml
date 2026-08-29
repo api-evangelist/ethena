@@ -1,0 +1,56 @@
+slug: ethena
+provider: Ethena
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Education
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 4
+edges:
+- tag: Learner Training Campaigns
+  spec_file: ethena-learner-training-campaigns-api-openapi.yml
+  capability_id: BC-300.40
+  capability_id_l1: BC-300
+  capability_name: Learning & Development Management
+  confidence: 0.85
+  evidence: '"The Ethena API allows you to view and manage learners and training information"; getLearnerTrainingCampaigns  Get
+    learner training campaigns'
+  reason: Employee compliance training campaigns assigned to learners — corporate learning and development
+    administration rather than academic programme management.
+- tag: Learner Training Modules
+  spec_file: ethena-learner-training-modules-api-openapi.yml
+  capability_id: BC-300.40
+  capability_id_l1: BC-300
+  capability_name: Learning & Development Management
+  confidence: 0.85
+  evidence: getLearnerTrainingModules  Get learner training modules; "view and manage learners and training
+    information"
+  reason: Per-learner training module status within employee compliance training — corporate learning
+    and development (training delivery/tracking) capability.
+- tag: Training Campaigns
+  spec_file: ethena-training-campaigns-api-openapi.yml
+  capability_id: BC-300.40
+  capability_id_l1: BC-300
+  capability_name: Learning & Development Management
+  confidence: 0.8
+  evidence: GET /v1/training-campaigns "Get training campaigns"; "training campaigns, learner training
+    campaigns, and learner training modules"
+  reason: Operations expose employee compliance training campaigns and their modules — enterprise training/capability-building
+    administration, i.e. Learning & Development Management.
+- tag: Learners
+  spec_file: ethena-learners-api-openapi.yml
+  capability_id: BC-300.40
+  capability_id_l1: BC-300
+  capability_name: Learning & Development Management
+  confidence: 0.75
+  evidence: '"The Ethena API allows you to view and manage learners and training information"; operations
+    "Create a new learner", "Update learner by id"'
+  reason: Learner records exist to administer employee compliance training campaigns and modules — this
+    is corporate training/learning administration (Learning & Development), not academic student records.
+    The subject population is employees of the buying organisation.
