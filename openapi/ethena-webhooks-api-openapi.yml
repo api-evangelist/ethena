@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   version: 1.3.0
-  title: Ethena Learner Training Campaigns Webhooks API
+  title: Ethena Webhooks API
   termsOfService: https://app.goethena.com/legal-and-privacy
   contact:
     name: Contact support
@@ -100,9 +100,9 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: &id001
+                required:
                 - title
-                properties: &id002
+                properties:
                   title:
                     description: A short, human-readable summary of the problem type.
                     type: string
@@ -130,8 +130,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id001
-                properties: *id002
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '403':
           description: Forbidden
           content:
@@ -141,8 +160,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id001
-                properties: *id002
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
     post:
       tags:
       - Webhooks
@@ -195,9 +233,9 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: &id003
+                required:
                 - title
-                properties: &id004
+                properties:
                   title:
                     description: A short, human-readable summary of the problem type.
                     type: string
@@ -225,8 +263,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id003
-                properties: *id004
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '403':
           description: Forbidden
           content:
@@ -236,8 +293,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id003
-                properties: *id004
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
   /v1/webhooks/{id}:
     get:
       tags:
@@ -305,9 +381,9 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: &id005
+                required:
                 - title
-                properties: &id006
+                properties:
                   title:
                     description: A short, human-readable summary of the problem type.
                     type: string
@@ -335,8 +411,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id005
-                properties: *id006
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '403':
           description: Forbidden
           content:
@@ -346,8 +441,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id005
-                properties: *id006
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '404':
           description: Not Found
           content:
@@ -357,8 +471,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id005
-                properties: *id006
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
     patch:
       tags:
       - Webhooks
@@ -410,9 +543,9 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: &id007
+                required:
                 - title
-                properties: &id008
+                properties:
                   title:
                     description: A short, human-readable summary of the problem type.
                     type: string
@@ -440,8 +573,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id007
-                properties: *id008
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '403':
           description: Forbidden
           content:
@@ -451,8 +603,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id007
-                properties: *id008
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '404':
           description: Not Found
           content:
@@ -462,8 +633,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id007
-                properties: *id008
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
     delete:
       tags:
       - Webhooks
@@ -493,9 +683,9 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: &id009
+                required:
                 - title
-                properties: &id010
+                properties:
                   title:
                     description: A short, human-readable summary of the problem type.
                     type: string
@@ -523,8 +713,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id009
-                properties: *id010
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '403':
           description: Forbidden
           content:
@@ -534,8 +743,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id009
-                properties: *id010
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '404':
           description: Not Found
           content:
@@ -545,8 +773,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id009
-                properties: *id010
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
   /v1/webhooks/{id}/trigger:
     post:
       tags:
@@ -596,9 +843,9 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: &id011
+                required:
                 - title
-                properties: &id012
+                properties:
                   title:
                     description: A short, human-readable summary of the problem type.
                     type: string
@@ -626,8 +873,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id011
-                properties: *id012
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '403':
           description: Forbidden
           content:
@@ -637,8 +903,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id011
-                properties: *id012
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '404':
           description: Not Found
           content:
@@ -648,8 +933,84 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id011
-                properties: *id012
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
+webhooks:
+  learnerTrainingCampaignCompleted:
+    post:
+      summary: Learner Training Campaign Completed Webhook
+      description: 'This webhook is triggered when a learner completes a training campaign. This corresponds to the `LEARNER_TRAINING_CAMPAIGN_COMPLETED` webhook type.
+
+
+        This can be triggered by actions a learner takes in the Ethena platform, but may also be triggered by actions taken by an Ethena administrator.
+
+
+        - Most often, this webhook will be triggered when a learner completes all the training modules in a training campaign.
+
+        - If an administrator manually marks a learner as having completed a training campaign, the webhook will be triggered.
+
+        - If an administrator removes a training module from a learner''s training campaign, and the rest of the training is completed, the webhook will be triggered.
+
+        - If a training campaign is archived in Ethena, the webhook will not be triggered.'
+      operationId: learnerTrainingCampaignCompletedWebhook
+      tags:
+      - Webhooks
+      parameters:
+      - name: X-Signature
+        in: header
+        description: A signature of the payload, generated using the secret key provided when the webhook was created.
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                required:
+                - learnerId
+                - trainingCampaignId
+                - statusTimestamp
+                properties:
+                  learnerId:
+                    allOf:
+                    - description: The unique identifier of a learner.
+                      type: string
+                      pattern: ^[a-zA-Z0-9]+$
+                      example: abc123def4
+                  trainingCampaignId:
+                    allOf:
+                    - description: The unique identifier of a training campaign.
+                      type: string
+                      pattern: ^[a-zA-Z0-9]+$
+                      example: tc456xyz78
+                  statusTimestamp:
+                    description: The date and time at which the learner completed the training campaign.
+                    type: string
+                    format: date-time
+                    example: '2025-08-20T17:32:53Z'
+      security:
+      - basic_auth: []
 components:
   securitySchemes:
     basic_auth:

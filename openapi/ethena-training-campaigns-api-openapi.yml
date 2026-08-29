@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   version: 1.3.0
-  title: Ethena Learner Training Campaigns API
+  title: Ethena Training Campaigns API
   termsOfService: https://app.goethena.com/legal-and-privacy
   contact:
     name: Contact support
@@ -68,7 +68,7 @@ paths:
           items:
             description: The status of the training campaign. `ACTIVE` campaigns may be scheduling training now and/or in the future. `ARCHIVED` campaigns have been deactivated and will no longer schedule new training.
             type: string
-            enum: &id001
+            enum:
             - ACTIVE
             - ARCHIVED
             example: ACTIVE
@@ -142,7 +142,9 @@ paths:
                             allOf:
                             - description: The status of the training campaign. `ACTIVE` campaigns may be scheduling training now and/or in the future. `ARCHIVED` campaigns have been deactivated and will no longer schedule new training.
                               type: string
-                              enum: *id001
+                              enum:
+                              - ACTIVE
+                              - ARCHIVED
                               example: ACTIVE
                           initialTrainingAt:
                             allOf:
@@ -171,9 +173,9 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: &id002
+                required:
                 - title
-                properties: &id003
+                properties:
                   title:
                     description: A short, human-readable summary of the problem type.
                     type: string
@@ -201,8 +203,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id002
-                properties: *id003
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
   /v1/training-campaigns/{id}:
     get:
       tags:
@@ -291,9 +312,9 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: &id004
+                required:
                 - title
-                properties: &id005
+                properties:
                   title:
                     description: A short, human-readable summary of the problem type.
                     type: string
@@ -321,8 +342,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id004
-                properties: *id005
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
         '404':
           description: Not Found
           content:
@@ -332,8 +372,27 @@ paths:
                 additionalProperties: true
                 minProperties: 1
                 description: JSON description of the issues based on the The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-                required: *id004
-                properties: *id005
+                required:
+                - title
+                properties:
+                  title:
+                    description: A short, human-readable summary of the problem type.
+                    type: string
+                  detail:
+                    description: A human-readable explanation specific to this occurrence of the problem.
+                    type: string
+                  invalid-params:
+                    description: An array of objects, each representing a parameter that was invalid.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the invalid parameter.
+                        reason:
+                          type: string
+                          description: The reason why the parameter is invalid.
 components:
   securitySchemes:
     basic_auth:

@@ -1,11 +1,7 @@
 {
   "provider": "ethena",
   "sources": [
-    "ethena-learner-training-campaigns-api-openapi.yml",
-    "ethena-learner-training-modules-api-openapi.yml",
-    "ethena-learners-api-openapi.yml",
-    "ethena-training-campaigns-api-openapi.yml",
-    "ethena-webhooks-api-openapi.yml"
+    "_original/ethena-openapi-original.yml"
   ],
   "outputs": [
     "ethena-learner-training-campaigns-api-openapi.yml",
@@ -17,6 +13,15 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "ethena-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0"
+  ],
+  "skipped": [
+    "ethena-learner-training-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ethena-learner-training-modules-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ethena-learners-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ethena-training-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ethena-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
