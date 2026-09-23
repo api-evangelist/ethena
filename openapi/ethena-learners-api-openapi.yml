@@ -9,28 +9,7 @@ info:
   x-logo:
     url: ./ethena-logo.png
     altText: Ethena logo
-  description: 'The Ethena API allows you to view and manage learners and training information.
-
-
-    # Accessing the API
-
-    In order to get access to our API please work with your sales representative to get an
-
-    API key provisioned and shared with you.
-
-
-    Webhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.
-
-
-    # Changelog
-
-    - **v1.0.0** - Initial release of the API, including learners, training campaigns, learner training campaigns, and learner training modules.
-
-    - **v1.1.0** - Added webhooks operations and support for learner training campaign completed webhook.
-
-    - **v1.2.0** - Remove separate language region property on learner and support Unicode Common Locale Data Repository language formats.
-
-    - **v1.3.0** - Added filter parameters for learners (email, name), learner training modules (learnerStatus, trainingCampaignStatus), and learner training campaigns (learnerStatus, trainingCampaignStatus). Added training campaign status field to training campaigns.'
+  description: The Ethena API allows you to view and manage learners and training information.
 servers:
 - url: https://api.goethena.com
 tags:
@@ -42,7 +21,15 @@ paths:
       tags:
       - Learners
       summary: Get learners
-      description: "Get many learners.\n\nThe query parameter filters are applied as `AND` conditions across different filters. \nIf multiple filters are used, the response will include only the learners that satisfy all the filters.\n\nWithin a single filter, multiple values are applied as `OR` conditions."
+      description: 'Get many learners.
+
+
+        The query parameter filters are applied as `AND` conditions across different filters.
+
+        If multiple filters are used, the response will include only the learners that satisfy all the filters.
+
+
+        Within a single filter, multiple values are applied as `OR` conditions.'
       operationId: getLearners
       parameters:
       - name: id

@@ -9,33 +9,12 @@ info:
   x-logo:
     url: ./ethena-logo.png
     altText: Ethena logo
-  description: 'The Ethena API allows you to view and manage learners and training information.
-
-
-    # Accessing the API
-
-    In order to get access to our API please work with your sales representative to get an
-
-    API key provisioned and shared with you.
-
-
-    Webhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.
-
-
-    # Changelog
-
-    - **v1.0.0** - Initial release of the API, including learners, training campaigns, learner training campaigns, and learner training modules.
-
-    - **v1.1.0** - Added webhooks operations and support for learner training campaign completed webhook.
-
-    - **v1.2.0** - Remove separate language region property on learner and support Unicode Common Locale Data Repository language formats.
-
-    - **v1.3.0** - Added filter parameters for learners (email, name), learner training modules (learnerStatus, trainingCampaignStatus), and learner training campaigns (learnerStatus, trainingCampaignStatus). Added training campaign status field to training campaigns.'
+  description: The Ethena API allows you to view and manage learners and training information.
 servers:
 - url: https://api.goethena.com
 tags:
 - name: Webhooks
-  description: "Webhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.\n\nOnce you have access, webhooks can be managed through the API. Currently, only the following webhooks are supported:\n  - Learner Training Campaign Completed\n\n# Security\n\nRequests to the webhook URL include a header `X-Signature`, which contains a signature of the payload. This signature is generated using the secret key provided when the webhook was created.\n\n## Signature Verification \n\nTo verify the signature of incoming requests, you need the secret key for a webhook. This key can be retrieved by calling `GET /v1/webhooks/{id}` after webhook creation. The secret key is not returned in the create webhook response. This key is used to generate a signature of the payload and compare it with the `X-Signature` header in the request.\n\nThe signature is generated using the **HMAC SHA-256** algorithm. The **secret key** is used as the key, and the **request payload** is used as the data. The resulting HMAC is then converted into a hexadecimal string.\n\nFor example:\n\n```js\nconst crypto = require('crypto');\n\nconst signature = crypto\n  .createHmac('sha256', secretKey) \n  .update(JSON.stringify(payload))\n  .digest('hex');\n```\n\nIn this example:\n\n1. `secretKey` is the secret key that can be retrieved by calling `GET /v1/webhooks/{id}` after webhook creation.\n1. `payload` is the data you receive in the webhook request (usually in JSON format).\n1. The `crypto.createHmac()` function creates a hash object, which uses the SHA-256 algorithm and the `secretKey` as the key.\n1. `update()` adds the stringified payload to the hash.\n1. `digest('hex')` generates the HMAC hash in hexadecimal format, which can be compared to the `X-Signature` header in the request.\n\n\n# Retry Policy\n\nWebhook requests will be attempted up to **three times**, with a retry interval of **five minutes**, before being considered failed.\n\nA **30-second request timeout** is enforced, meaning the webhook request must complete within 30 seconds. If the request exceeds this timeout, the attempt will be considered failed."
+  description: Webhooks are not enabled by default, please work with your sales representative to have them enabled if you need them.
 paths:
   /v1/webhooks:
     get:
