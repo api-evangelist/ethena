@@ -49,6 +49,9 @@ specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-07-19'
 image: https://www.goethena.com/wp-content/uploads/2025/12/Ethenas-Featured-Image.png
+x-docs-platform: redocly
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-10-03
 tags:
 - Company
 - Compliance
