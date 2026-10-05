@@ -1,0 +1,12 @@
+{
+ "url": "https://api.goethena.com/docs/ethena-openapi.yaml",
+ "requested_url": "https://api.goethena.com/docs/ethena-openapi.yaml",
+ "status": 200,
+ "content_type": "text/yaml; charset=UTF-8",
+ "bytes": 84307,
+ "sha256": "e76271c4e642f7919788f94583f54e1657011e10deb8a63f503784f9c4338daf",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
