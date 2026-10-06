@@ -47,7 +47,7 @@ accessModel:
   method: derived
 specificationVersion: '0.23'
 created: '2026-07-17'
-modified: '2026-07-19'
+modified: '2026-10-06'
 image: https://www.goethena.com/wp-content/uploads/2025/12/Ethenas-Featured-Image.png
 x-docs-platform: redocly
 x-docs-platform-confidence: medium
@@ -260,6 +260,10 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- url: https://www.goethena.com/blog/categories/articles/
+  type: Blog
+- url: https://www.goethena.com/blog/categories/articles/feed/
+  type: BlogRSS
 - type: CapabilityMap
   url: capabilities/ethena-capability-edges.yml
   name: Ethena Business Capability Map
