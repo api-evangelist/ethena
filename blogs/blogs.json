@@ -5,7 +5,7 @@
       "source": "https://www.goethena.com/blog/categories/articles/",
       "feed_url": "https://www.goethena.com/blog/categories/articles/feed/",
       "title": "",
-      "saved": 2,
+      "saved": 0,
       "method": "discovered"
     },
     {
@@ -23,6 +23,13 @@
       "method": "discovered"
     },
     {
+      "source": "https://www.goethena.com/blog/feed/",
+      "feed_url": "https://www.goethena.com/blog/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
       "source": "https://www.goethena.com/pricing",
       "feed_url": "https://www.goethena.com/pricing",
       "title": "",
@@ -30,6 +37,6 @@
       "method": "none"
     }
   ],
-  "post_count": 2,
-  "fetched": "2026-10-10T13:15:00Z"
+  "post_count": 9,
+  "fetched": "2026-10-17T14:53:57Z"
 }
