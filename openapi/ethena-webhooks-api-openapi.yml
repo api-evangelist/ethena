@@ -1004,3 +1004,9 @@ x-tagGroups:
   - Learner Training Campaigns
   - Learner Training Modules
   - Webhooks
+x-provenance:
+  method: harvested
+  publisher: Ethena
+  source: https://api.goethena.com/docs/ethena-openapi.yaml
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
